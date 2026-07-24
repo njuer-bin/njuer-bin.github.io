@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {{- partial "head.html" . -}}
+</head>
+<body>
+  <!-- 深夜酒馆背景 -->
+  <div class="tavern-bg"></div>
+
+  <!-- 发光酒瓶架 -->
+  <div class="bottle-shelf-backdrop">
+    <div class="bottle bottle-1"></div>
+    <div class="bottle bottle-2"></div>
+    <div class="bottle bottle-3"></div>
+    <div class="bottle bottle-4"></div>
+    <div class="bottle bottle-5"></div>
+    <div class="bottle bottle-6"></div>
+  </div>
+
+  <!-- 暖色光晕 -->
+  <div class="warm-glow-overlay"></div>
+
+  <!-- 吧台底部装饰 -->
+  <div class="bar-counter-decoration"></div>
+
+  <!-- 空气浮尘粒子 -->
+  <div class="ambient-particle" style="left:15%;animation-duration:25s;animation-delay:0s;"></div>
+  <div class="ambient-particle" style="left:35%;animation-duration:30s;animation-delay:5s;width:2px;height:2px;"></div>
+  <div class="ambient-particle" style="left:55%;animation-duration:28s;animation-delay:3s;"></div>
+  <div class="ambient-particle" style="left:75%;animation-duration:35s;animation-delay:8s;width:2px;height:2px;"></div>
+  <div class="ambient-particle" style="left:90%;animation-duration:22s;animation-delay:2s;"></div>
+  <div class="ambient-particle" style="left:25%;animation-duration:32s;animation-delay:12s;width:4px;height:4px;"></div>
+  <div class="ambient-particle" style="left:50%;animation-duration:27s;animation-delay:7s;width:2px;height:2px;"></div>
+
+  {{- partial "header.html" . -}}
+
+  <main class="main-content">
+    {{- block "main" . }}{{ end -}}
+  </main>
+
+  {{- partial "footer.html" . -}}
+
+  <script src="/js/script.js"></script>
+  {{- block "extra_scripts" . }}{{ end -}}
+</body>
+</html>

@@ -1,0 +1,213 @@
+{{ define "main" }}
+<div class="tavern-scene">
+  <!-- 酒保（居中） -->
+  <div class="bartender-area" id="bartenderArea">
+    <div class="bartender" id="bartender">
+      <div class="bartender-speech" id="bartenderSpeech">
+        <span class="speech-text">👋 点我调酒</span>
+      </div>
+      <img src="/images/bartender.png" alt="酒保" class="bartender-img">
+    </div>
+  </div>
+
+  <!-- 吧台调酒区（默认隐藏，点击酒保后显示） -->
+  <div class="bar-counter" id="barCounter">
+    <!-- 植物图片位 -->
+    <div class="plant-spot">
+      <img src="/images/plant-placeholder.png" alt="吧台绿植" class="plant-image" id="plantImage">
+      <p class="plant-hint">🌿 放一盆绿植吧</p>
+    </div>
+
+    <!-- 吧台蜡烛 -->
+    <div class="bar-candle">
+      <div class="candle-body"></div>
+      <div class="candle-wick"></div>
+      <div class="candle-flame"></div>
+    </div>
+
+    <!-- 调酒区 -->
+    <div class="mixing-area">
+      <h2 class="mixing-title">🧪 调一杯酒</h2>
+      <p class="mixing-hint">选择基酒，调出对应心情的文章</p>
+
+      <!-- 基酒架 -->
+      <div class="spirit-shelf" id="spiritShelf">
+        {{ range .Site.Params.spirits }}
+        <button class="spirit-btn" data-spirit="{{ .id }}" style="--spirit-color: {{ .color }};">
+          <span class="spirit-emoji">{{ .emoji }}</span>
+          <span class="spirit-name">{{ .name }}</span>
+          <span class="spirit-mood">{{ .mood }}</span>
+        </button>
+        {{ end }}
+      </div>
+
+      <!-- 调酒杯 -->
+      <div class="mixing-glass" id="mixingGlass">
+        <div class="glass-body">
+          <div class="glass-fill" id="glassFill"></div>
+          <div class="glass-bubbles" id="glassBubbles"></div>
+          <div class="glass-content" id="glassContent">
+            <span class="glass-placeholder">点击基酒加入</span>
+          </div>
+        </div>
+        <div class="glass-stem"></div>
+        <div class="glass-base"></div>
+      </div>
+
+      <!-- 已选基酒 -->
+      <div class="selected-spirits" id="selectedSpirits">
+        <span class="selected-label">已选：</span>
+        <div class="selected-tags" id="selectedTags"></div>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="mixing-actions">
+        <button class="btn btn-mix" id="btnMix" disabled>🍸 调配</button>
+        <button class="btn btn-clear" id="btnClear">🗑️ 清空</button>
+      </div>
+
+      <!-- 调酒结果 -->
+      <div class="mix-result" id="mixResult">
+        <div class="result-animation" id="resultAnimation"></div>
+        <div class="result-content" id="resultContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右上角酒单（默认隐藏，点击酒保后显示） -->
+  <aside class="menu-section" id="menuSection">
+    <div class="menu-board">
+      <h2 class="menu-title">📜 今日酒单</h2>
+      <div class="menu-categories" id="menuCategories">
+        {{ range $category, $pages := .Site.Taxonomies.categories }}
+        <div class="menu-category">
+          <h3 class="category-header">{{ $category }}</h3>
+          <ul class="category-posts">
+            {{ range $pages.Pages }}
+            <li class="menu-post" data-moods="{{ delimit .Params.moods "," }}">
+              <a href="{{ .RelPermalink }}" class="post-link">
+                <span class="post-title">{{ .Title }}</span>
+              </a>
+              <div class="post-recipe">
+                <span class="recipe-label">配方：</span>
+                {{ range .Params.moods }}
+                <span class="recipe-ingredient" data-spirit="{{ . }}">{{ . }}</span>
+                {{ end }}
+              </div>
+              <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+            </li>
+            {{ end }}
+          </ul>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </aside>
+
+  <!-- 壁炉故事（默认隐藏，点击酒保后显示） -->
+  <section class="tavern-dynamic" id="tavernDynamic">
+    <div class="dynamic-content">
+      <h2>🔥 壁炉旁的故事</h2>
+      <div class="recent-posts">
+        {{ range first 3 (where .Site.RegularPages "Section" "posts") }}
+        <article class="story-card">
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          <p class="story-meta">{{ .Date.Format "2006-01-02" }} · {{ delimit .Params.categories " · " }}</p>
+          <p class="story-recipe">🍸 {{ delimit .Params.moods " + " }}</p>
+          <p class="story-excerpt">{{ .Description }}</p>
+        </article>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 信箱入口 -->
+<a href="/mailbox/" class="mailbox-icon" id="mailboxIcon">
+  <div class="mailbox-body">
+    <div class="mailbox-slot"></div>
+    <div class="mailbox-flag"></div>
+  </div>
+  <span class="mailbox-label">📬 信箱</span>
+</a>
+{{ end }}
+
+{{ define "extra_scripts" }}
+<script>
+// 将文章数据传递给 JavaScript
+window.tavernPosts = [
+  {{ range where .Site.RegularPages "Section" "posts" }}
+  {
+    title: {{ .Title | jsonify }},
+    url: {{ .RelPermalink | jsonify }},
+    description: {{ .Description | jsonify }},
+    moods: {{ .Params.moods | jsonify }},
+    date: {{ .Date.Format "2006-01-02" | jsonify }},
+    categories: {{ .Params.categories | jsonify }}
+  },
+  {{ end }}
+];
+window.spiritsData = [
+  {{ range .Site.Params.spirits }}
+  {
+    id: {{ .id | jsonify }},
+    name: {{ .name | jsonify }},
+    emoji: {{ .emoji | jsonify }},
+    mood: {{ .mood | jsonify }},
+    color: {{ .color | jsonify }}
+  },
+  {{ end }}
+];
+
+// 酒保交互逻辑
+(function() {
+  const bartender = document.getElementById('bartender');
+  const barCounter = document.getElementById('barCounter');
+  const menuSection = document.getElementById('menuSection');
+  const tavernDynamic = document.getElementById('tavernDynamic');
+  const speech = document.getElementById('bartenderSpeech');
+  let isOpen = false;
+
+  if (!bartender || !barCounter) return;
+
+  // 初始隐藏所有交互元素
+  barCounter.classList.add('hidden');
+  menuSection.classList.add('hidden');
+  tavernDynamic.classList.add('hidden');
+
+  bartender.addEventListener('click', function(e) {
+    e.stopPropagation();
+    isOpen = !isOpen;
+
+    if (isOpen) {
+      // 显示所有内容
+      barCounter.classList.remove('hidden');
+      barCounter.classList.add('visible');
+
+      menuSection.classList.remove('hidden');
+      menuSection.classList.add('visible');
+
+      tavernDynamic.classList.remove('hidden');
+      tavernDynamic.classList.add('visible');
+
+      // 酒保状态变化
+      bartender.classList.add('active');
+      speech.querySelector('.speech-text').textContent = '🍸 想调点什么？';
+    } else {
+      // 收起所有
+      barCounter.classList.remove('visible');
+      barCounter.classList.add('hidden');
+
+      menuSection.classList.remove('visible');
+      menuSection.classList.add('hidden');
+
+      tavernDynamic.classList.remove('visible');
+      tavernDynamic.classList.add('hidden');
+
+      bartender.classList.remove('active');
+      speech.querySelector('.speech-text').textContent = '👋 点我调酒';
+    }
+  });
+})();
+</script>
+{{ end }}

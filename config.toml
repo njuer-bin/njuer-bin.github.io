@@ -1,0 +1,103 @@
+baseURL = "https://你的用户名.github.io"
+languageCode = "zh-CN"
+title = "月光酒馆"
+# 使用内置布局（layouts/ 目录）
+defaultContentLanguage = "zh"
+paginate = 10
+enableRobotsTXT = true
+
+[params]
+  description = "一家藏在角落里的酒馆，每种酒都对应一种心情"
+  tavernName = "月光酒馆"
+  tavernSubtitle = "每种心情，都有一杯酒"
+
+  # 调酒基酒配置
+  [[params.spirits]]
+    id = "whisky"
+    name = "威士忌"
+    emoji = "🥃"
+    mood = "沉稳·思考"
+    color = "#d4a24e"
+
+  [[params.spirits]]
+    id = "gin"
+    name = "金酒"
+    emoji = "🍸"
+    mood = "清新·明快"
+    color = "#b8d4e3"
+
+  [[params.spirits]]
+    id = "rum"
+    name = "朗姆酒"
+    emoji = "🍹"
+    mood = "热情·奔放"
+    color = "#c97a35"
+
+  [[params.spirits]]
+    id = "wine"
+    name = "红酒"
+    emoji = "🍷"
+    mood = "浪漫·温柔"
+    color = "#8b2252"
+
+  [[params.spirits]]
+    id = "champagne"
+    name = "香槟"
+    emoji = "🥂"
+    mood = "庆祝·欢乐"
+    color = "#f0e68c"
+
+  [[params.spirits]]
+    id = "sake"
+    name = "清酒"
+    emoji = "🍶"
+    mood = "宁静·治愈"
+    color = "#f5f0e1"
+
+  # 评论区配置 (使用 giscus)
+  [params.giscus]
+    enable = true
+    repo = "你的用户名/你的用户名.github.io"
+    repoId = ""  # 请填写你的 repoId
+    category = "Announcements"
+    categoryId = ""  # 请填写你的 categoryId
+    mapping = "pathname"
+    reactionsEnabled = "1"
+    emitMetadata = "0"
+    inputPosition = "top"
+    theme = "dark"
+    lang = "zh-CN"
+
+  # 信箱配置 (使用 Formspree)
+  [params.mailbox]
+    enable = true
+    formspreeEndpoint = ""  # 在 formspree.io 注册后获取，例如 "https://formspree.io/f/xxxxxx"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "酒馆首页"
+    url = "/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "posts"
+    name = "酒单"
+    url = "/posts/"
+    weight = 2
+
+  [[menu.main]]
+    identifier = "mailbox"
+    name = "信箱"
+    url = "/mailbox/"
+    weight = 3
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  mood = "moods"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

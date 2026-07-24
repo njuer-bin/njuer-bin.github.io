@@ -1,0 +1,19 @@
+{{ define "main" }}
+<div class="page-container">
+  <h1 class="page-title">{{ .Title }}</h1>
+  <div class="page-content">
+    {{ .Content }}
+  </div>
+  <div class="list-grid">
+    {{ range .Pages.ByDate.Reverse }}
+    <article class="list-card">
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      <p class="list-meta">{{ .Date.Format "2006-01-02" }}</p>
+      {{ if .Description }}
+      <p class="list-desc">{{ .Description }}</p>
+      {{ end }}
+    </article>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

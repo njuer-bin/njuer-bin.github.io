@@ -1,0 +1,57 @@
+{{ define "main" }}
+<div class="page-container">
+  <h1 class="page-title">✉️ 酒馆信箱</h1>
+  <div class="page-content">
+    <p>欢迎来到月光酒馆的信箱。你可以在这里给酒馆主人写信，也可以阅读其他访客的信件。</p>
+  </div>
+
+  <!-- 写信入口 -->
+  <div class="mailbox-write">
+    <h2>📝 写一封信</h2>
+    {{ if .Site.Params.mailbox.formspreeEndpoint }}
+    <form class="letter-form" action="{{ .Site.Params.mailbox.formspreeEndpoint }}" method="POST">
+      <div class="form-group">
+        <label for="name">你的名字</label>
+        <input type="text" id="name" name="name" placeholder="匿名访客" required>
+      </div>
+      <div class="form-group">
+        <label for="title">标题</label>
+        <input type="text" id="title" name="title" placeholder="信件的标题" required>
+      </div>
+      <div class="form-group">
+        <label for="message">内容</label>
+        <textarea id="message" name="message" rows="6" placeholder="写下你想说的话..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-send">📨 寄出</button>
+    </form>
+    {{ else }}
+    <div class="mailbox-notice">
+      <p>📬 信箱正在筹备中...</p>
+      <p>请先在 <code>config.toml</code> 中配置 <code>formspreeEndpoint</code></p>
+    </div>
+    {{ end }}
+  </div>
+
+  <!-- 已公开的信件 -->
+  <div class="mailbox-letters">
+    <h2>📖 已公开的信件</h2>
+    {{ $letters := where .Site.RegularPages "Section" "letters" }}
+    {{ if $letters }}
+    <div class="letters-list">
+      {{ range $letters.ByDate.Reverse }}
+      <article class="letter-card">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p class="letter-from">✉️ 来自：{{ .Params.from }}</p>
+        <p class="letter-excerpt">{{ .Content | plainify | truncate 150 }}</p>
+        <time>{{ .Date.Format "2006-01-02" }}</time>
+      </article>
+      {{ end }}
+    </div>
+    {{ else }}
+    <div class="no-letters">
+      <p>📭 还没有公开的信件...</p>
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

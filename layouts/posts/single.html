@@ -1,0 +1,48 @@
+{{ define "main" }}
+<div class="page-container">
+  <article class="content-article post-article">
+    <!-- 酒谱信息 -->
+    <div class="drink-recipe-card">
+      <h3>🍸 这杯酒的配方</h3>
+      <div class="recipe-spirits">
+        {{ range .Params.moods }}
+        {{ $spiritID := . }}
+        {{ $spirit := index (where $.Site.Params.spirits "id" $spiritID) 0 }}
+        {{ if $spirit }}
+        <span class="recipe-spirit" style="--spirit-color: {{ $spirit.color }};">
+          <span class="spirit-badge">{{ $spirit.emoji }}</span>
+          <span class="spirit-info">
+            <strong>{{ $spirit.name }}</strong>
+            <small>{{ $spirit.mood }}</small>
+          </span>
+        </span>
+        {{ end }}
+        {{ end }}
+      </div>
+    </div>
+
+    <h1 class="article-title">{{ .Title }}</h1>
+    <div class="article-meta">
+      <time>{{ .Date.Format "2006-01-02" }}</time>
+      {{ with .Params.categories }}
+      <span class="article-categories">
+        {{ range . }}
+        <span class="category-tag">{{ . }}</span>
+        {{ end }}
+      </span>
+      {{ end }}
+    </div>
+    <div class="article-content">
+      {{ .Content }}
+    </div>
+  </article>
+
+  <!-- 评论区 -->
+  {{ if .Site.Params.giscus.enable }}
+  <div class="comments-section">
+    <h2>💬 评论这杯酒</h2>
+    <div class="giscus"></div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

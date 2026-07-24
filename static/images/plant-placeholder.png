@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#2c1810" rx="10"/>
+  <text x="100" y="90" text-anchor="middle" font-size="50">🌿</text>
+  <text x="100" y="130" text-anchor="middle" font-size="14" fill="#8d6e63">放一盆绿植</text>
+  <text x="100" y="150" text-anchor="middle" font-size="12" fill="#6d4c41">替换 images/ 下的图片</text>
+</svg>

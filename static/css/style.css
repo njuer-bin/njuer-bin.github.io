@@ -1,0 +1,2269 @@
+/* ============================================
+   月光酒馆 · 深夜文艺酒馆风格
+   ============================================ */
+
+/* --- CSS 变量 --- */
+:root {
+  --bg-deep: #050201;
+  --bg-dark: #0a0503;
+  --bg-mid: #120a06;
+  --bg-surface: #1c100a;
+  --wood-dark: #2a1810;
+  --wood-mid: #3d2417;
+  --wood-light: #6d4c41;
+  --amber: #d4a24e;
+  --amber-light: #f5c842;
+  --amber-glow: rgba(212, 162, 78, 0.12);
+  --amber-glow-strong: rgba(212, 162, 78, 0.25);
+  --gold: #e8c56b;
+  --text-primary: #e8ddd0;
+  --text-secondary: #b8a898;
+  --text-muted: #7a6a5a;
+  --accent: #c97a35;
+  --candle: #ff8a30;
+  --shadow: rgba(0, 0, 0, 0.7);
+  --font-display: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+  --font-body: 'Noto Serif SC', 'Microsoft YaHei', serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.3s ease;
+}
+
+/* --- 基础重置 --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-deep);
+  min-height: 100vh;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--amber-light);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover {
+  color: var(--amber);
+}
+
+/* ============================================
+   深夜酒馆背景
+   ============================================ */
+
+/* 主背景：深夜酒馆全景图 */
+.tavern-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -5;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 1400px 900px at 50% 60%, rgba(60, 35, 20, 0.3), transparent 70%),
+    radial-gradient(ellipse 600px 400px at 50% 80%, rgba(120, 70, 30, 0.1), transparent 60%),
+    url('/images/tavern-bg.png') center center / cover no-repeat;
+  background-color: #050201;
+}
+
+/* 背景纹理：微妙的木板感（叠加在图片上） */
+.tavern-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 120px,
+      rgba(255, 255, 255, 0.005) 120px,
+      rgba(255, 255, 255, 0.005) 121px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 4px,
+      rgba(0, 0, 0, 0.03) 4px,
+      rgba(0, 0, 0, 0.03) 5px
+    );
+  opacity: 0.15;
+}
+
+/* ============================================
+   发光酒瓶架（吧台背景）
+   ============================================ */
+.bottle-shelf-backdrop {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  z-index: -4;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* 搁板暖光 */
+.bottle-shelf-backdrop::before {
+  content: '';
+  position: absolute;
+  bottom: 30%;
+  left: 5%;
+  right: 5%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 5%, rgba(212, 162, 78, 0.15) 20%, rgba(212, 162, 78, 0.25) 50%, rgba(212, 162, 78, 0.15) 80%, transparent 95%);
+  box-shadow: 0 0 30px rgba(212, 162, 78, 0.1), 0 0 60px rgba(212, 162, 78, 0.05);
+}
+
+/* 搁板上的整体光晕 */
+.bottle-shelf-backdrop::after {
+  content: '';
+  position: absolute;
+  bottom: 20%;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background:
+    radial-gradient(ellipse 600px 100px at 20% 100%, rgba(212, 162, 78, 0.06), transparent 70%),
+    radial-gradient(ellipse 600px 100px at 50% 100%, rgba(212, 162, 78, 0.08), transparent 70%),
+    radial-gradient(ellipse 600px 100px at 80% 100%, rgba(212, 162, 78, 0.06), transparent 70%);
+}
+
+/* 发光酒瓶 - 纯 CSS 剪影 */
+.bottle {
+  position: absolute;
+  bottom: calc(30% + 10px);
+  pointer-events: none;
+}
+
+.bottle-1 {
+  left: 8%;
+  height: 140px;
+  width: 28px;
+}
+.bottle-1::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 80px;
+  background: rgba(212, 162, 78, 0.06);
+  border-radius: 4px 4px 8px 8px;
+  box-shadow: 0 0 20px rgba(212, 162, 78, 0.08), inset 0 0 15px rgba(212, 162, 78, 0.04);
+}
+.bottle-1::after {
+  content: '';
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 40px;
+  background: rgba(212, 162, 78, 0.04);
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 0 10px rgba(212, 162, 78, 0.05);
+}
+
+.bottle-2 {
+  left: 16%;
+  height: 160px;
+  width: 32px;
+}
+.bottle-2::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 95px;
+  background: rgba(212, 162, 78, 0.07);
+  border-radius: 5px 5px 10px 10px;
+  box-shadow: 0 0 25px rgba(212, 162, 78, 0.1), inset 0 0 15px rgba(212, 162, 78, 0.05);
+}
+.bottle-2::after {
+  content: '';
+  position: absolute;
+  bottom: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 45px;
+  background: rgba(212, 162, 78, 0.05);
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 0 12px rgba(212, 162, 78, 0.06);
+}
+
+.bottle-3 {
+  left: 25%;
+  height: 150px;
+  width: 30px;
+}
+.bottle-3::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 88px;
+  background: rgba(180, 140, 80, 0.08);
+  border-radius: 4px 4px 9px 9px;
+  box-shadow: 0 0 22px rgba(180, 140, 80, 0.1), inset 0 0 15px rgba(180, 140, 80, 0.05);
+}
+.bottle-3::after {
+  content: '';
+  position: absolute;
+  bottom: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 42px;
+  background: rgba(180, 140, 80, 0.05);
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 0 10px rgba(180, 140, 80, 0.06);
+}
+
+.bottle-4 {
+  right: 25%;
+  height: 155px;
+  width: 30px;
+}
+.bottle-4::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 90px;
+  background: rgba(190, 155, 90, 0.07);
+  border-radius: 4px 4px 9px 9px;
+  box-shadow: 0 0 22px rgba(190, 155, 90, 0.09), inset 0 0 15px rgba(190, 155, 90, 0.05);
+}
+.bottle-4::after {
+  content: '';
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 44px;
+  background: rgba(190, 155, 90, 0.05);
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 0 10px rgba(190, 155, 90, 0.06);
+}
+
+.bottle-5 {
+  right: 16%;
+  height: 145px;
+  width: 28px;
+}
+.bottle-5::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 82px;
+  background: rgba(212, 162, 78, 0.06);
+  border-radius: 4px 4px 8px 8px;
+  box-shadow: 0 0 20px rgba(212, 162, 78, 0.08), inset 0 0 15px rgba(212, 162, 78, 0.04);
+}
+.bottle-5::after {
+  content: '';
+  position: absolute;
+  bottom: 82px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 42px;
+  background: rgba(212, 162, 78, 0.04);
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 0 10px rgba(212, 162, 78, 0.05);
+}
+
+.bottle-6 {
+  right: 8%;
+  height: 165px;
+  width: 32px;
+}
+.bottle-6::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 98px;
+  background: rgba(170, 130, 70, 0.08);
+  border-radius: 5px 5px 10px 10px;
+  box-shadow: 0 0 25px rgba(170, 130, 70, 0.1), inset 0 0 15px rgba(170, 130, 70, 0.05);
+}
+.bottle-6::after {
+  content: '';
+  position: absolute;
+  bottom: 98px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 46px;
+  background: rgba(170, 130, 70, 0.05);
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 0 12px rgba(170, 130, 70, 0.06);
+}
+
+/* 酒瓶呼吸光晕动画 */
+.bottle {
+  animation: bottle-glow 4s ease-in-out infinite;
+}
+.bottle-2 { animation-delay: 0.7s; }
+.bottle-3 { animation-delay: 1.4s; }
+.bottle-4 { animation-delay: 2.1s; }
+.bottle-5 { animation-delay: 2.8s; }
+.bottle-6 { animation-delay: 3.5s; }
+
+@keyframes bottle-glow {
+  0%, 100% { opacity: 0.7; filter: brightness(0.8); }
+  50% { opacity: 1; filter: brightness(1.1); }
+}
+
+/* ============================================
+   吧台底部装饰
+   ============================================ */
+.bar-counter-decoration {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent, rgba(10, 5, 3, 0.95)),
+    linear-gradient(90deg,
+      rgba(60, 35, 20, 0.3) 0%,
+      rgba(80, 50, 30, 0.2) 25%,
+      rgba(60, 35, 20, 0.3) 50%,
+      rgba(80, 50, 30, 0.2) 75%,
+      rgba(60, 35, 20, 0.3) 100%
+    );
+  border-top: 2px solid rgba(109, 76, 65, 0.3);
+  box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* 台面暖光反射 */
+.bar-counter-decoration::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, rgba(212, 162, 78, 0.15) 30%, rgba(212, 162, 78, 0.25) 50%, rgba(212, 162, 78, 0.15) 70%, transparent 95%);
+}
+
+/* ============================================
+   暖色光晕层
+   ============================================ */
+.warm-glow-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 500px 400px at 50% 70%, rgba(212, 162, 78, 0.04), transparent 70%),
+    radial-gradient(ellipse 300px 200px at 30% 80%, rgba(212, 162, 78, 0.03), transparent 60%),
+    radial-gradient(ellipse 300px 200px at 70% 80%, rgba(212, 162, 78, 0.03), transparent 60%);
+  animation: warm-pulse 6s ease-in-out infinite;
+}
+
+@keyframes warm-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* --- 浮尘粒子 --- */
+.ambient-particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  background: rgba(212, 162, 78, 0.25);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  animation: float-particle linear infinite;
+}
+
+@keyframes float-particle {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   头部导航
+   ============================================ */
+.tavern-header {
+  background: linear-gradient(180deg, rgba(5, 2, 1, 0.95), rgba(10, 5, 3, 0.85));
+  border-bottom: 1px solid rgba(212, 162, 78, 0.08);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.tavern-sign {
+  text-align: center;
+  position: relative;
+}
+.tavern-sign:hover .tavern-title {
+  text-shadow: 0 0 30px rgba(212, 162, 78, 0.3), 0 0 60px rgba(212, 162, 78, 0.1);
+}
+
+.tavern-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--amber);
+  text-shadow: 0 0 15px rgba(212, 162, 78, 0.2);
+  transition: text-shadow var(--transition);
+  letter-spacing: 6px;
+  font-weight: 400;
+}
+
+.tavern-subtitle {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  margin-top: 2px;
+}
+
+.tavern-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  padding: 0.45rem 1.1rem;
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  transition: all var(--transition);
+  border: 1px solid transparent;
+  letter-spacing: 1px;
+}
+.nav-link:hover,
+.nav-link.active {
+  color: var(--amber);
+  background: rgba(212, 162, 78, 0.08);
+  border-color: rgba(212, 162, 78, 0.15);
+}
+
+/* ============================================
+   首页布局
+   ============================================ */
+.tavern-scene {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* 让酒保区域填满剩余空间 */
+.bartender-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  pointer-events: none;
+  padding: 1rem;
+  min-height: 0;
+}
+
+.bar-counter {
+  background:
+    radial-gradient(ellipse 800px 200px at 50% 100%, rgba(212, 162, 78, 0.04), transparent 70%),
+    linear-gradient(180deg, rgba(12, 7, 4, 0.95), rgba(8, 4, 2, 0.98));
+  border: 1px solid rgba(42, 24, 16, 0.6);
+  border-radius: var(--radius);
+  padding: 2rem 2rem 3rem;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(212, 162, 78, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  max-width: min(800px, 95vw);
+  width: 100%;
+  margin: 0 auto;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: top center;
+}
+
+/* 吧台台面木纹边缘 */
+.bar-counter::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(109, 76, 65, 0.4) 0%,
+    rgba(141, 110, 99, 0.3) 20%,
+    rgba(109, 76, 65, 0.4) 40%,
+    rgba(141, 110, 99, 0.3) 60%,
+    rgba(109, 76, 65, 0.4) 80%,
+    rgba(141, 110, 99, 0.3) 100%
+  );
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* 吧台底部光晕 */
+.bar-counter::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(0deg, rgba(212, 162, 78, 0.03), transparent);
+  pointer-events: none;
+}
+
+/* --- 植物位 --- */
+.plant-spot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.8rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(42, 24, 16, 0.5);
+  min-height: 90px;
+  justify-content: center;
+}
+
+.plant-image {
+  max-width: 80px;
+  max-height: 80px;
+  object-fit: contain;
+  transition: all var(--transition);
+  opacity: 0.4;
+  filter: grayscale(0.5);
+}
+.plant-image[src="/images/plant-placeholder.png"] {
+  opacity: 0.2;
+  filter: grayscale(1);
+}
+
+.plant-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* --- 调酒区 --- */
+.mixing-area {
+  position: relative;
+  z-index: 1;
+}
+
+.mixing-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--amber);
+  text-align: center;
+  letter-spacing: 3px;
+  margin-bottom: 0.3rem;
+  font-weight: 400;
+}
+
+.mixing-hint {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: 1px;
+}
+
+/* --- 基酒架 --- */
+.spirit-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin: 0.8rem 0;
+  padding: 1rem 0.5rem 0.8rem;
+  position: relative;
+  background:
+    linear-gradient(180deg, transparent 20px, rgba(61, 36, 23, 0.2) 20px, rgba(42, 24, 16, 0.3) 22px, transparent 22px);
+}
+
+/* 搁板 */
+.spirit-shelf::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(180deg, rgba(93, 64, 55, 0.4), rgba(78, 52, 46, 0.5));
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* 搁板底部微光 */
+.spirit-shelf::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 20%;
+  right: 20%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(212, 162, 78, 0.08), transparent);
+  border-radius: 2px;
+}
+
+.spirit-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 72px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  position: relative;
+  overflow: hidden;
+}
+
+.spirit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--spirit-color, #d4a24e);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.spirit-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--spirit-color, #d4a24e);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 30px var(--spirit-color, transparent);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.spirit-btn:hover::before {
+  opacity: 0.06;
+}
+
+.spirit-btn.selected {
+  border-color: var(--spirit-color, #d4a24e);
+  box-shadow: 0 0 25px var(--spirit-color, transparent), inset 0 0 15px rgba(212, 162, 78, 0.05);
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.spirit-btn.selected::before {
+  opacity: 0.12;
+}
+
+.spirit-emoji {
+  font-size: 1.6rem;
+  position: relative;
+  z-index: 1;
+  line-height: 1.2;
+}
+
+.spirit-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.spirit-mood {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  position: relative;
+  z-index: 1;
+}
+
+/* --- 吧台蜡烛 --- */
+.bar-candle {
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.candle-body {
+  width: 14px;
+  height: 26px;
+  background: linear-gradient(180deg, #f5f0e1, #e0d4c0);
+  border-radius: 2px 2px 3px 3px;
+  box-shadow:
+    inset 0 0 8px rgba(0,0,0,0.1),
+    0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.candle-body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: 2px;
+  height: 6px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+}
+
+.candle-wick {
+  width: 2px;
+  height: 5px;
+  background: #333;
+  border-radius: 1px;
+  margin-bottom: -2px;
+  position: relative;
+  z-index: 1;
+}
+
+.candle-flame {
+  width: 7px;
+  height: 10px;
+  background: radial-gradient(ellipse at 50% 100%, #d4a24e, #c97a35, transparent);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flame-dance 1.5s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+  filter: blur(0.3px);
+}
+
+.candle-flame::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+@keyframes flame-dance {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1) translateY(0);
+  }
+  25% {
+    transform: scaleY(1.1) scaleX(0.9) translateY(-1px);
+  }
+  50% {
+    transform: scaleY(0.95) scaleX(1.05) translateY(0);
+  }
+  75% {
+    transform: scaleY(1.05) scaleX(0.95) translateY(-1px);
+  }
+}
+
+.bar-candle::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(ellipse, rgba(212, 162, 78, 0.06), transparent 70%);
+  border-radius: 50%;
+  animation: candle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes candle-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.1); }
+}
+
+/* --- 调酒杯 --- */
+.mixing-glass {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem auto;
+  cursor: default;
+}
+
+.glass-body {
+  width: 140px;
+  height: 180px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  border-radius: 0 0 18px 18px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.01);
+  overflow: hidden;
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 20px rgba(212, 162, 78, 0.03);
+}
+
+.glass-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  transition: height 0.5s ease, background 0.5s ease;
+  background: rgba(212, 162, 78, 0.12);
+  border-radius: 0 0 16px 16px;
+}
+
+.glass-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: bubble-rise 3s ease-in infinite;
+}
+
+@keyframes bubble-rise {
+  0% { bottom: 0; opacity: 0; transform: scale(0.5); }
+  20% { opacity: 0.8; }
+  100% { bottom: 100%; opacity: 0; transform: scale(1.3); }
+}
+
+.glass-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.glass-placeholder {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1rem;
+  opacity: 0.6;
+}
+
+.glass-stem {
+  width: 28px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-base {
+  width: 90px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* --- 已选基酒标签 --- */
+.selected-spirits {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+  min-height: 36px;
+  justify-content: center;
+}
+
+.selected-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.selected-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.selected-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  background: rgba(212, 162, 78, 0.1);
+  border: 1px solid rgba(212, 162, 78, 0.15);
+  animation: tag-in 0.3s ease;
+}
+
+@keyframes tag-in {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* --- 操作按钮 --- */
+.mixing-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.btn {
+  padding: 0.6rem 1.8rem;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 1px;
+}
+
+.btn-mix {
+  background: linear-gradient(135deg, rgba(212, 162, 78, 0.8), rgba(201, 122, 53, 0.8));
+  color: var(--bg-deep);
+  font-weight: 700;
+  border-color: rgba(212, 162, 78, 0.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.btn-mix:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 162, 78, 0.25);
+}
+.btn-mix:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-clear {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+.btn-clear:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.btn-send {
+  background: linear-gradient(135deg, rgba(212, 162, 78, 0.8), rgba(201, 122, 53, 0.8));
+  color: var(--bg-deep);
+  font-weight: 700;
+  border-color: rgba(212, 162, 78, 0.5);
+  padding: 0.6rem 2.2rem;
+  font-size: 0.95rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  align-self: flex-start;
+}
+.btn-send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 162, 78, 0.25);
+}
+
+/* --- 调酒结果 --- */
+.mix-result {
+  margin-top: 1.2rem;
+  min-height: 50px;
+  position: relative;
+}
+
+.result-animation {
+  display: none;
+  text-align: center;
+  font-size: 1.8rem;
+  animation: potion-glow 1s ease-in-out;
+}
+
+@keyframes potion-glow {
+  0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
+  50% { transform: scale(1.2); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+
+.result-content {
+  display: none;
+  text-align: center;
+  padding: 1.2rem;
+  background: rgba(212, 162, 78, 0.06);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(212, 162, 78, 0.12);
+  animation: result-in 0.5s ease;
+}
+
+@keyframes result-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-content h3 {
+  color: var(--amber);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 2px;
+}
+
+.result-content p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+}
+
+.result-content .btn-read {
+  display: inline-block;
+  padding: 0.45rem 1.3rem;
+  background: rgba(212, 162, 78, 0.2);
+  color: var(--amber-light);
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all var(--transition);
+  border: 1px solid rgba(212, 162, 78, 0.2);
+}
+.result-content .btn-read:hover {
+  background: rgba(212, 162, 78, 0.3);
+  box-shadow: 0 0 25px rgba(212, 162, 78, 0.15);
+  transform: translateY(-2px);
+}
+
+.result-no-match {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 0.8rem;
+  animation: result-in 0.5s ease;
+  font-size: 0.85rem;
+}
+
+/* ============================================
+   右侧菜单栏
+   ============================================ */
+.menu-section {
+  position: fixed;
+  top: 80px;
+  right: 10px;
+  z-index: 30;
+  width: 320px;
+  max-width: calc(100vw - 20px);
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.menu-section.hidden {
+  display: none;
+}
+
+.menu-section.visible {
+  display: block;
+  animation: menu-slide-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.menu-section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.menu-section::-webkit-scrollbar-thumb {
+  background: rgba(42, 24, 16, 0.4);
+  border-radius: 2px;
+}
+
+.menu-board {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.2), transparent),
+    linear-gradient(180deg, rgba(10, 6, 3, 0.95), rgba(5, 2, 1, 0.98));
+  border: 1px solid rgba(42, 24, 16, 0.6);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 60px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  position: relative;
+}
+
+.menu-board::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 20%, rgba(212, 162, 78, 0.15), transparent 80%);
+  border-radius: var(--radius) var(--radius) 0 0;
+  pointer-events: none;
+}
+
+.menu-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--amber);
+  text-align: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  margin-bottom: 0.8rem;
+  letter-spacing: 3px;
+  font-weight: 400;
+}
+
+.menu-category {
+  margin-bottom: 1rem;
+}
+
+.category-header {
+  font-size: 0.8rem;
+  color: var(--accent);
+  padding: 0.25rem 0.5rem;
+  background: rgba(201, 122, 53, 0.08);
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-display);
+  letter-spacing: 2px;
+}
+
+.category-posts {
+  list-style: none;
+}
+
+.menu-post {
+  padding: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  transition: background var(--transition);
+  border-radius: 6px;
+}
+.menu-post:last-child {
+  border-bottom: none;
+}
+.menu-post:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.post-link {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.post-title {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  transition: color var(--transition);
+}
+.post-link:hover .post-title {
+  color: var(--amber);
+}
+
+.post-recipe {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin: 0.2rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.recipe-label {
+  color: var(--text-muted);
+}
+
+.recipe-ingredient {
+  display: inline-block;
+  padding: 0.08rem 0.35rem;
+  background: rgba(212, 162, 78, 0.08);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  color: var(--amber-light);
+}
+
+.post-date {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   酒馆动态
+   ============================================ */
+.tavern-dynamic {
+  max-width: 900px;
+  margin: 2rem auto 3rem;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+.tavern-dynamic.hidden {
+  display: none;
+}
+
+.tavern-dynamic.visible {
+  display: block;
+  animation: fade-in 0.5s ease forwards;
+}
+
+.dynamic-content {
+  background:
+    radial-gradient(ellipse 500px 150px at 50% 0%, rgba(212, 162, 78, 0.03), transparent 70%),
+    linear-gradient(180deg, rgba(10, 6, 3, 0.9), rgba(5, 2, 1, 0.95));
+  border: 1px solid rgba(42, 24, 16, 0.6);
+  border-radius: var(--radius);
+  padding: 2rem;
+  position: relative;
+  box-shadow:
+    inset 0 4px 20px rgba(212, 162, 78, 0.02),
+    0 4px 20px rgba(0,0,0,0.2);
+}
+
+.dynamic-content::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 20%, rgba(212, 162, 78, 0.12), transparent 80%);
+  border-radius: var(--radius) var(--radius) 0 0;
+  pointer-events: none;
+}
+
+.dynamic-content h2 {
+  font-family: var(--font-display);
+  color: var(--amber);
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 3px;
+  font-weight: 400;
+}
+
+.recent-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.2rem;
+}
+
+.story-card {
+  padding: 1.2rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all var(--transition);
+}
+.story-card:hover {
+  border-color: rgba(212, 162, 78, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.story-card h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+  font-weight: 400;
+}
+
+.story-card h3 a {
+  color: var(--text-primary);
+}
+.story-card h3 a:hover {
+  color: var(--amber);
+}
+
+.story-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.story-recipe {
+  font-size: 0.75rem;
+  color: var(--amber-light);
+  margin-bottom: 0.4rem;
+}
+
+.story-excerpt {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================
+   页面通用
+   ============================================ */
+.page-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--amber);
+  text-align: center;
+  margin-bottom: 1.2rem;
+  letter-spacing: 4px;
+  font-weight: 400;
+}
+
+.page-content {
+  line-height: 2;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.page-content p {
+  margin-bottom: 1rem;
+}
+
+/* 列表卡片 */
+.list-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.list-card {
+  padding: 1.2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+.list-card:hover {
+  border-color: rgba(212, 162, 78, 0.15);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.list-card h2 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.list-card h2 a {
+  color: var(--text-primary);
+}
+.list-card h2 a:hover {
+  color: var(--amber);
+}
+
+.list-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0.25rem 0;
+}
+
+.list-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+
+/* ============================================
+   文章页面
+   ============================================ */
+.content-article {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+}
+
+/* 酒谱卡片 */
+.drink-recipe-card {
+  background: linear-gradient(135deg, rgba(212, 162, 78, 0.06), rgba(201, 122, 53, 0.04));
+  border: 1px solid rgba(212, 162, 78, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.drink-recipe-card h3 {
+  font-family: var(--font-display);
+  color: var(--amber);
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.recipe-spirits {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.recipe-spirit {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--spirit-color, #d4a24e);
+}
+
+.spirit-badge {
+  font-size: 1.3rem;
+}
+
+.spirit-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.spirit-info strong {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+}
+
+.spirit-info small {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.article-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.category-tag {
+  padding: 0.08rem 0.4rem;
+  background: rgba(212, 162, 78, 0.08);
+  border-radius: 4px;
+  color: var(--amber-light);
+  font-size: 0.75rem;
+}
+
+.article-content {
+  line-height: 2.2;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.article-content p {
+  margin-bottom: 1.2rem;
+}
+
+.article-content h2 {
+  font-family: var(--font-display);
+  color: var(--amber);
+  font-size: 1.3rem;
+  margin: 2rem 0 0.8rem;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.article-content h3 {
+  font-family: var(--font-display);
+  color: var(--amber-light);
+  font-size: 1rem;
+  margin: 1.5rem 0 0.6rem;
+  font-weight: 400;
+}
+
+.article-content blockquote {
+  border-left: 3px solid rgba(212, 162, 78, 0.3);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  background: rgba(212, 162, 78, 0.03);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.article-content code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--amber-light);
+}
+
+.article-content pre {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.article-content img {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  margin: 1rem 0;
+}
+
+/* 评论区 */
+.comments-section {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: var(--radius);
+}
+
+.comments-section h2 {
+  font-family: var(--font-display);
+  color: var(--amber);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+/* ============================================
+   信箱页面
+   ============================================ */
+.mailbox-write {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.mailbox-write h2 {
+  font-family: var(--font-display);
+  color: var(--amber);
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.letter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.6rem 0.9rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  transition: border-color var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(212, 162, 78, 0.3);
+  box-shadow: 0 0 15px rgba(212, 162, 78, 0.06);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.mailbox-notice {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-muted);
+}
+
+.mailbox-notice code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  color: var(--amber-light);
+}
+
+.mailbox-letters {
+  margin-top: 1.5rem;
+}
+
+.mailbox-letters h2 {
+  font-family: var(--font-display);
+  color: var(--amber);
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.letters-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.letter-card {
+  padding: 1.2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+.letter-card:hover {
+  border-color: rgba(212, 162, 78, 0.12);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.letter-card h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  font-weight: 400;
+}
+
+.letter-card h3 a {
+  color: var(--text-primary);
+}
+.letter-card h3 a:hover {
+  color: var(--amber);
+}
+
+.letter-from {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.letter-excerpt {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.letter-card time {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.no-letters {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(42, 24, 16, 0.5);
+}
+
+/* 信件详情页 */
+.letter-article .letter-content {
+  background: rgba(255, 255, 255, 0.01);
+  padding: 1.5rem;
+  border-radius: var(--radius-sm);
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  line-height: 2.2;
+}
+
+/* ============================================
+   页脚
+   ============================================ */
+.tavern-footer {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), transparent);
+  border-top: 1px solid rgba(42, 24, 16, 0.5);
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-content p {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.footer-powered {
+  font-size: 0.65rem;
+}
+
+.footer-powered a {
+  color: var(--text-muted);
+}
+.footer-powered a:hover {
+  color: var(--amber-light);
+}
+
+/* ============================================
+   滚动条
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(42, 24, 16, 0.6);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(109, 76, 65, 0.5);
+}
+
+/* ============================================
+   酒保
+   ============================================ */
+
+/* 酒保区域（居中） */
+.bartender-area {
+  position: relative;
+  width: 100%;
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  pointer-events: none;
+  padding: 2rem 1rem;
+}
+
+/* 酒保容器 */
+.bartender {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: bartender-idle 3s ease-in-out infinite;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5));
+  pointer-events: auto;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90vw;
+}
+
+.bartender:hover {
+  filter: drop-shadow(0 8px 32px rgba(212, 162, 78, 0.3));
+  transform: scale(1.05);
+}
+
+.bartender.active {
+  animation: none;
+  transform: scale(0.75);
+  transform-origin: bottom center;
+  filter: drop-shadow(0 8px 32px rgba(212, 162, 78, 0.4));
+  cursor: default;
+}
+
+.bartender.active:hover {
+  transform: scale(0.75);
+}
+
+@keyframes bartender-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* 酒保图片 - 完全自适应 */
+.bartender-img {
+  max-width: min(200px, 40vw);
+  max-height: min(60vh, 400px);
+  width: auto;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: all var(--transition);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  object-fit: contain;
+}
+
+.bartender:hover .bartender-img {
+  box-shadow: 0 8px 32px rgba(212, 162, 78, 0.2);
+}
+
+/* 酒保对话框 - 自适应 */
+.bartender-speech {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(20, 12, 8, 0.95), rgba(10, 6, 3, 0.95));
+  border: 1px solid rgba(212, 162, 78, 0.3);
+  border-radius: 16px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.4),
+    0 0 20px rgba(212, 162, 78, 0.05);
+  backdrop-filter: blur(10px);
+  animation: speech-bob 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 10;
+  font-size: clamp(0.75rem, 2vw, 1rem);
+}
+
+.bartender-speech::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(10, 6, 3, 0.95);
+}
+
+.speech-text {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: var(--amber-light);
+  letter-spacing: 1px;
+}
+
+@keyframes speech-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-3px); }
+}
+
+@keyframes speech-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-3px); }
+}
+
+/* 酒保发光指示 */
+.bartender::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 20px;
+  background: radial-gradient(ellipse, rgba(212, 162, 78, 0.15), transparent);
+  border-radius: 50%;
+  animation: bartender-glow 2s ease-in-out infinite;
+}
+
+@keyframes bartender-glow {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+}
+
+/* ============================================
+   信箱入口
+   ============================================ */
+
+.mailbox-icon {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: mailbox-idle 4s ease-in-out infinite;
+}
+
+.mailbox-icon:hover {
+  transform: scale(1.1) translateY(-5px);
+  animation: none;
+}
+
+@keyframes mailbox-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.mailbox-body {
+  width: 56px;
+  height: 44px;
+  background: linear-gradient(135deg, #3d2417, #2a1810);
+  border: 2px solid #5d4037;
+  border-radius: 6px 6px 4px 4px;
+  position: relative;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: all var(--transition);
+}
+
+.mailbox-icon:hover .mailbox-body {
+  border-color: var(--amber);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.4),
+    0 0 20px rgba(212, 162, 78, 0.15);
+}
+
+/* 信箱投信口 */
+.mailbox-slot {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 4px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* 信箱取信口 */
+.mailbox-body::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 12px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* 信箱旗标 */
+.mailbox-flag {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  width: 4px;
+  height: 16px;
+  background: #5d4037;
+  border-radius: 1px;
+}
+
+.mailbox-flag::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2px;
+  width: 10px;
+  height: 7px;
+  background: #c97a35;
+  border-radius: 1px 3px 2px 1px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 70%);
+}
+
+.mailbox-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  transition: color var(--transition);
+}
+
+.mailbox-icon:hover .mailbox-label {
+  color: var(--amber-light);
+}
+
+/* ============================================
+   吧台显示/隐藏
+   ============================================ */
+
+.bar-counter.hidden {
+  display: none;
+}
+
+.bar-counter.visible {
+  display: block;
+  animation: bar-slide-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bar-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 酒单和壁炉的隐藏/显示 */
+.menu-section.hidden,
+.tavern-dynamic.hidden {
+  display: none;
+}
+
+.menu-section.visible {
+  display: block;
+  animation: menu-slide-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.tavern-dynamic.visible {
+  display: block;
+  animation: fade-in 0.5s ease forwards;
+}
+
+@keyframes menu-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ============================================
+   响应式
+   ============================================ */
+@media (max-width: 1024px) {
+  .tavern-scene {
+    padding: 0 1rem;
+  }
+
+  .menu-section {
+    width: 300px;
+    right: 10px;
+    top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    padding: 0.8rem 0;
+    gap: 0.4rem;
+  }
+
+  .tavern-title {
+    font-size: 1.3rem;
+  }
+
+  .tavern-scene {
+    padding: 0 1rem;
+    margin: 1rem auto;
+  }
+
+  .bar-counter {
+    padding: 1rem 1rem 2rem;
+  }
+
+  .spirit-shelf {
+    gap: 0.4rem;
+  }
+
+  .spirit-btn {
+    min-width: 58px;
+    padding: 0.45rem;
+  }
+
+  .spirit-emoji {
+    font-size: 1.3rem;
+  }
+
+  .spirit-name {
+    font-size: 0.7rem;
+  }
+
+  .spirit-mood {
+    display: none;
+  }
+
+  .glass-body {
+    width: 110px;
+    height: 150px;
+  }
+
+  .recent-posts {
+    grid-template-columns: 1fr;
+  }
+
+  .page-container {
+    padding: 0 1rem;
+  }
+
+  .content-article,
+  .letter-article {
+    padding: 1.5rem;
+  }
+
+  .article-title {
+    font-size: 1.3rem;
+  }
+
+  .recipe-spirits {
+    flex-direction: column;
+  }
+
+  .mixing-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bottle-shelf-backdrop {
+    height: 45%;
+  }
+
+  .bottle {
+    display: none;
+  }
+
+  /* 酒保移动端 */
+  .bartender-img {
+    max-width: min(140px, 35vw);
+    max-height: min(40vh, 300px);
+  }
+    min-height: 40vh;
+  }
+
+  /* 信箱移动端适配 */
+  .mailbox-icon {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .mailbox-body {
+    width: 44px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tavern-nav {
+    gap: 0.2rem;
+  }
+
+  .nav-link {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .tavern-title {
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+  }
+
+  /* 酒保移动端适配 */
+  .bartender-img {
+    max-width: 90px;
+    max-height: 30vh;
+  }
+
+  /* 信箱移动端适配 */
+  .mailbox-icon {
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .mailbox-body {
+    width: 38px;
+    height: 30px;
+  }
+
+  .mailbox-label {
+    font-size: 0.65rem;
+  }
+}

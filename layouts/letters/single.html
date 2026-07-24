@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="page-container">
+  <article class="content-article letter-article">
+    <h1 class="article-title">✉️ {{ .Title }}</h1>
+    <div class="article-meta">
+      <span class="letter-from">寄信人：{{ .Params.from }}</span>
+      <time>{{ .Date.Format "2006-01-02" }}</time>
+    </div>
+    <div class="article-content letter-content">
+      {{ .Content }}
+    </div>
+  </article>
+
+  <!-- 评论区 -->
+  {{ if .Site.Params.giscus.enable }}
+  <div class="comments-section">
+    <h2>💬 回复这封信</h2>
+    <div class="giscus"></div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

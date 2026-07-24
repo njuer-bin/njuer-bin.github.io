@@ -1,0 +1,28 @@
+{{ define "main" }}
+<div class="page-container">
+  <article class="content-article">
+    <h1 class="article-title">{{ .Title }}</h1>
+    <div class="article-meta">
+      <time>{{ .Date.Format "2006-01-02" }}</time>
+      {{ with .Params.categories }}
+      <span class="article-categories">
+        {{ range . }}
+        <span class="category-tag">{{ . }}</span>
+        {{ end }}
+      </span>
+      {{ end }}
+    </div>
+    <div class="article-content">
+      {{ .Content }}
+    </div>
+  </article>
+
+  <!-- 评论区 -->
+  {{ if .Site.Params.giscus.enable }}
+  <div class="comments-section">
+    <h2>💬 评论</h2>
+    <div class="giscus"></div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}
