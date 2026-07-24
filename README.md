@@ -7,7 +7,7 @@
 - 🍸 **调酒阅读** — 选择基酒调配出对应心情的文章
 - 📜 **酒单菜单** — 所有文章按分类列出，标注配方
 - 🌿 **吧台绿植** — 预留图片位，可替换为自己的绿植照片
-- ✉️ **酒馆信箱** — 访客可以写信，也可以读公开的信件
+- ✉️ **酒馆信箱** — 访客可以寄信，也可以阅读公开的信件
 - 💬 **评论区** — 每篇文章和信件都支持评论
 - 🌙 **酒馆氛围** — 暖色调、木质纹理、烛光 flicker 效果
 
@@ -32,7 +32,7 @@ cd 你的用户名.github.io
 # 提交并推送
 git add .
 git commit -m "🎉 初始化月光酒馆博客"
-git push origin main
+git push origin master
 ```
 
 ### 3. 配置个人信息
@@ -57,11 +57,20 @@ title = "月光酒馆"
    - `repoId` — 从 giscus.app 获取
    - `categoryId` — 从 giscus.app 获取
 
-### 5. 配置信箱 (可选)
+### 5. 配置信箱
+
+信箱功能支持**寄信**和**读信**两部分：
+
+#### 寄信（访客 → 你的邮箱）
 
 1. 打开 [formspree.io](https://formspree.io) 注册
 2. 创建一个新表单，获取 endpoint URL
 3. 在 `config.toml` 中填写 `formspreeEndpoint`
+4. 访客提交的信件会发送到你的邮箱，页面不跳转
+
+#### 读信（GitHub Issues 公开展示）
+
+信件会通过 GitHub Issues API 展示在信箱页面，无需额外配置。
 
 ### 6. 启用 GitHub Pages
 
@@ -103,31 +112,34 @@ draft: false
 
 每篇文章选择 **2-3 种** 基酒作为配方。
 
+## 管理公开信件
+
+访客寄信后，信件会发送到你的邮箱。如果你想公开某封信，有两种方式：
+
+### 方式一：直接在 GitHub 上创建 Issue
+
+1. 打开仓库的 [Issues](https://github.com/你的用户名/你的用户名.github.io/issues) 页面
+2. 点击 **"New Issue"**
+3. 标题 = 信件标题，正文 = 信件内容
+4. 添加标签：`酒馆来信` 和 `来自-寄信人名字`
+5. 提交后自动显示在信箱页面
+
+### 方式二：使用 GitHub Actions 工作流
+
+1. 打开仓库的 **Actions** → **创建酒馆来信**
+2. 点击 **"Run workflow"**，填入寄信人、标题、内容
+3. 运行后自动创建 Issue
+
 ## 替换绿植图片
 
 把你自己的绿植照片保存为 `static/images/plant.png`，然后在 `config.toml` 中或直接修改 `layouts/index.html` 中的图片路径。
-
-## 添加信件
-
-在 `content/letters/` 下创建 Markdown 文件：
-
-```markdown
----
-title: "信件标题"
-date: 2026-07-24
-from: "寄信人名字"
-draft: false
----
-
-信件内容...
-```
 
 ## 目录结构
 
 ```
 ├── content/
 │   ├── posts/          # 博客文章
-│   └── letters/        # 公开信件
+│   └── letters/        # 公开信件（旧方案，现改用 GitHub Issues）
 ├── layouts/
 │   ├── _default/       # 默认模板
 │   ├── partials/       # 局部模板
@@ -137,15 +149,20 @@ draft: false
 │   └── mailbox/        # 信箱页面模板
 ├── static/
 │   ├── css/style.css   # 样式
-│   ├── js/script.js    # 调酒交互逻辑
+│   ├── js/
+│   │   ├── script.js   # 调酒交互逻辑
+│   │   └── mailbox.js  # 信箱功能（寄信 + 读信）
 │   └── images/         # 图片
 ├── config.toml         # 配置文件
-└── .github/workflows/  # 自动部署
+└── .github/workflows/
+    ├── hugo.yml        # Hugo 自动构建部署
+    └── create-letter.yml  # 创建公开信件的 GitHub Actions 工作流
 ```
 
 ## 技术栈
 
 - [Hugo](https://gohugo.io) — 静态站点生成器
 - [GitHub Pages](https://pages.github.com) — 免费托管
+- [GitHub Issues API](https://docs.github.com/rest/issues) — 信件存储与展示
 - [giscus](https://giscus.app) — 评论系统
 - [Formspree](https://formspree.io) — 表单提交
