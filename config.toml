@@ -7,8 +7,8 @@ paginate = 10
 enableRobotsTXT = true
 
 [params]
-  description = "一家藏在角落里的酒馆，每种酒都对应一种心情"
-  tavernName = "月光酒馆"
+  description = "只要你有一个好的故事和一个愿意倾听的人，你永远不会完蛋——《海上钢琴师》"
+  tavernName = "解忧杂货店"
   tavernSubtitle = "每种心情，都有一杯酒"
 
   # 调酒基酒配置
@@ -57,10 +57,10 @@ enableRobotsTXT = true
   # 评论区配置 (使用 giscus)
   [params.giscus]
     enable = true
-    repo = "你的用户名/你的用户名.github.io"
-    repoId = ""  # 请填写你的 repoId
+    repo = "njuer-bin/njuer-bin.github.io"
+    repoId = "R_kgDOTiJv4w"  # 请填写你的 repoId
     category = "Announcements"
-    categoryId = ""  # 请填写你的 categoryId
+    categoryId = "DIC_kwDOTiJv484DB3pw"  # 请填写你的 categoryId
     mapping = "pathname"
     reactionsEnabled = "1"
     emitMetadata = "0"
@@ -71,7 +71,7 @@ enableRobotsTXT = true
   # 信箱配置 (使用 Formspree)
   [params.mailbox]
     enable = true
-    formspreeEndpoint = ""  # 在 formspree.io 注册后获取，例如 "https://formspree.io/f/xxxxxx"
+    formspreeEndpoint = "https://formspree.io/f/mnjegolj"  # 在 formspree.io 注册后获取，例如 "https://formspree.io/f/xxxxxx"
 
 [menu]
   [[menu.main]]
