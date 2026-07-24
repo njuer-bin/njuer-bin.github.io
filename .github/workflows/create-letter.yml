@@ -1,0 +1,40 @@
+name: 创建酒馆来信
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: '寄信人'
+        required: true
+        default: '匿名访客'
+        type: string
+      title:
+        description: '信件标题'
+        required: true
+        type: string
+      message:
+        description: '信件内容'
+        required: true
+        type: string
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: 创建 Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const name = '${{ inputs.name }}';
+            const title = '${{ inputs.title }}';
+            const message = '${{ inputs.message }}';
+            const body = `**寄信人：** ${name}\n\n**标题：** ${title}\n\n---\n\n${message}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['酒馆来信', '来自-' + name],
+            });
