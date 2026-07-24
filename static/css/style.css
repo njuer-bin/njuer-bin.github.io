@@ -2193,12 +2193,13 @@ a:hover {
   }
 
   .tavern-scene {
-    padding: 0 1rem;
-    margin: 1rem auto;
+    padding: 0 0.8rem;
+    margin: 0.5rem auto;
+    min-height: calc(100vh - 60px);
   }
 
   .bar-counter {
-    padding: 1rem 1rem 2rem;
+    padding: 1rem 0.8rem 1.5rem;
   }
 
   .spirit-shelf {
@@ -2253,8 +2254,12 @@ a:hover {
     align-items: center;
   }
 
+  .mixing-title {
+    font-size: 1.1rem;
+  }
+
   .bottle-shelf-backdrop {
-    height: 45%;
+    height: 40%;
   }
 
   .bottle {
@@ -2264,12 +2269,25 @@ a:hover {
   /* 酒保移动端 */
   .bartender-img {
     max-width: min(140px, 35vw);
-    max-height: min(40vh, 300px);
+    max-height: min(35vh, 260px);
   }
-    min-height: 40vh;
+  .bartender-area {
+    padding: 0.5rem;
+    min-height: 0;
   }
 
-  /* 信箱移动端适配 */
+  /* 菜单移动端 */
+  .menu-section {
+    width: min(300px, 90vw);
+    right: 5px;
+    top: 70px;
+  }
+
+  .menu-board {
+    padding: 1rem;
+  }
+
+  /* 信箱移动端 */
   .mailbox-icon {
     right: 20px;
     bottom: 20px;
@@ -2279,16 +2297,34 @@ a:hover {
     width: 44px;
     height: 36px;
   }
+
+  /* 信箱表单 */
+  .mailbox-write {
+    padding: 1rem;
+  }
+
+  .letter-card {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .tavern-nav {
+  .header-content {
+    padding: 0.6rem 0.8rem;
     gap: 0.2rem;
   }
 
+  .tavern-nav {
+    gap: 0.15rem;
+  }
+
   .nav-link {
-    padding: 0.3rem 0.7rem;
-    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
   }
 
   .tavern-title {
@@ -2296,24 +2332,279 @@ a:hover {
     letter-spacing: 3px;
   }
 
+  .tavern-subtitle {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+  }
+
+  .tavern-scene {
+    padding: 0 0.5rem;
+    margin: 0.3rem auto;
+    min-height: calc(100vh - 50px);
+  }
+
   /* 酒保移动端适配 */
   .bartender-img {
-    max-width: 90px;
-    max-height: 30vh;
+    max-width: 80px;
+    max-height: 25vh;
+  }
+  .bartender-area {
+    padding: 0.3rem;
+  }
+  .bartender-speech {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  /* 基酒区 3 列网格 */
+  .spirit-shelf {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+    padding: 0.8rem 0.3rem 0.6rem;
+  }
+
+  .spirit-btn {
+    min-width: 0;
+    padding: 0.35rem 0.2rem;
+  }
+
+  .spirit-emoji {
+    font-size: 1.1rem;
+  }
+
+  .spirit-name {
+    font-size: 0.65rem;
+  }
+
+  /* 调酒杯缩小 */
+  .glass-body {
+    width: 80px;
+    height: 110px;
+  }
+  .glass-stem {
+    width: 20px;
+    height: 25px;
+  }
+  .glass-base {
+    width: 60px;
+    height: 5px;
+  }
+  .mixing-glass {
+    margin: 0.8rem auto;
+  }
+  .glass-placeholder {
+    font-size: 0.6rem;
+  }
+
+  .mixing-title {
+    font-size: 0.95rem;
+  }
+  .mixing-hint {
+    font-size: 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .btn {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.8rem;
+  }
+
+  .mixing-actions {
+    gap: 0.5rem;
+    margin: 0.6rem 0;
+  }
+
+  .selected-spirits {
+    margin: 0.4rem 0;
+    min-height: 28px;
+  }
+  .selected-label {
+    font-size: 0.7rem;
+  }
+  .selected-tag {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+  }
+
+  /* 调酒结果 */
+  .result-content h3 {
+    font-size: 1rem;
+  }
+  .result-content p {
+    font-size: 0.78rem;
+  }
+
+  /* 酒瓶背景 */
+  .bottle-shelf-backdrop {
+    height: 35%;
+  }
+
+  /* 菜单 */
+  .menu-section {
+    width: calc(100vw - 10px);
+    max-width: 280px;
+    right: 5px;
+    top: 65px;
+  }
+  .menu-board {
+    padding: 0.8rem;
+  }
+  .menu-title {
+    font-size: 1rem;
+  }
+  .category-header {
+    font-size: 0.85rem;
+  }
+  .menu-post {
+    padding: 0.4rem 0;
+  }
+
+  /* 壁炉故事 */
+  .story-card {
+    padding: 0.8rem;
   }
 
   /* 信箱移动端适配 */
   .mailbox-icon {
-    right: 15px;
-    bottom: 15px;
+    right: 12px;
+    bottom: 12px;
   }
 
   .mailbox-body {
-    width: 38px;
-    height: 30px;
+    width: 34px;
+    height: 28px;
   }
 
   .mailbox-label {
+    font-size: 0.6rem;
+  }
+
+  /* 页面内容 */
+  .page-container {
+    padding: 0 0.8rem;
+    margin: 1rem auto;
+  }
+
+  .page-title {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
+  }
+
+  .page-content {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .mailbox-write {
+    padding: 0.8rem;
+  }
+  .mailbox-write h2 {
+    font-size: 0.95rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-send {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  .letter-card {
+    padding: 0.8rem;
+  }
+  .letter-card h3 {
+    font-size: 0.95rem;
+  }
+  .letter-excerpt {
+    font-size: 0.8rem;
+  }
+
+  .mailbox-letters h2 {
+    font-size: 0.95rem;
+  }
+
+  .content-article,
+  .letter-article {
+    padding: 1rem;
+  }
+  .article-title {
+    font-size: 1.1rem;
+  }
+
+  .notification {
+    font-size: 0.8rem;
+    padding: 0.6rem 1.2rem;
+    top: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .tavern-nav {
+    gap: 0.1rem;
+  }
+
+  .nav-link {
+    padding: 0.2rem 0.4rem;
     font-size: 0.65rem;
+  }
+
+  .tavern-title {
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+  }
+
+  .tavern-subtitle {
+    display: none;
+  }
+
+  .spirit-shelf {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .spirit-btn {
+    padding: 0.3rem 0.15rem;
+  }
+
+  .spirit-emoji {
+    font-size: 1rem;
+  }
+
+  .spirit-name {
+    font-size: 0.6rem;
+  }
+
+  .glass-body {
+    width: 65px;
+    height: 90px;
+  }
+  .glass-stem {
+    width: 16px;
+    height: 20px;
+  }
+  .glass-base {
+    width: 50px;
+    height: 4px;
+  }
+
+  .mixing-title {
+    font-size: 0.85rem;
+  }
+
+  .menu-section {
+    max-width: 240px;
+  }
+
+  .page-container {
+    padding: 0 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1rem;
   }
 }
