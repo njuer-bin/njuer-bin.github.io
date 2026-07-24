@@ -1742,6 +1742,56 @@ a:hover {
   border: 1px dashed rgba(42, 24, 16, 0.5);
 }
 
+/* 通知弹窗 */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  z-index: 9999;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  letter-spacing: 1px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.notification-visible {
+  transform: translateX(-50%) translateY(0);
+}
+.notification-success {
+  background: rgba(46, 125, 50, 0.9);
+  color: #fff;
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+.notification-error {
+  background: rgba(183, 28, 28, 0.9);
+  color: #fff;
+  border: 1px solid rgba(244, 67, 54, 0.5);
+}
+
+/* 加载中状态 */
+.loading-letters {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-muted);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 按钮禁用状态 */
+.btn-send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
 /* 信件详情页 */
 .letter-article .letter-content {
   background: rgba(255, 255, 255, 0.01);
