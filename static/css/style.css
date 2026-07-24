@@ -2278,9 +2278,15 @@ a:hover {
 
   /* 菜单移动端 */
   .menu-section {
-    width: min(300px, 90vw);
-    right: 5px;
-    top: 70px;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    top: auto;
+    right: auto;
+    z-index: 1;
+    max-height: none;
+    overflow-y: visible;
+    margin: 1rem auto 0;
   }
 
   .menu-board {
@@ -2442,10 +2448,15 @@ a:hover {
 
   /* 菜单 */
   .menu-section {
-    width: calc(100vw - 10px);
-    max-width: 280px;
-    right: 5px;
-    top: 65px;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    top: auto;
+    right: auto;
+    z-index: 1;
+    max-height: none;
+    overflow-y: visible;
+    margin: 0.8rem auto 0;
   }
   .menu-board {
     padding: 0.8rem;
