@@ -1,0 +1,39 @@
+name: 回复酒馆来信
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: '信件编号 (Issue #)'
+        required: true
+        type: string
+      name:
+        description: '回复人'
+        required: true
+        default: '酒馆主人'
+        type: string
+      message:
+        description: '回复内容'
+        required: true
+        type: string
+
+jobs:
+  add-reply:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: 添加回复评论
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = parseInt('${{ inputs.issue_number }}');
+            const name = '${{ inputs.name }}';
+            const message = '${{ inputs.message }}';
+            const body = `**${name}** 回复：\n\n${message}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: body,
+            });

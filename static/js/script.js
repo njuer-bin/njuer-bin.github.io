@@ -70,14 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
     return s ? s.name : id;
   }
 
-  function sortMoods(moods) {
-    return [...moods].sort();
-  }
-
-  function moodsMatch(a, b) {
-    const sa = sortMoods(a);
-    const sb = sortMoods(b);
-    return sa.length === sb.length && sa.every((v, i) => v === sb[i]);
+  function moodsMatch(selected, articleMoods) {
+    if (!selected || !selected.length) return false;
+    return selected.every(mood => articleMoods.includes(mood));
   }
 
   // --- 更新调酒杯 ---
@@ -235,17 +230,39 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       if (matched.length > 0) {
-        const post = matched[0];
-        // 颜色混合效果
         const mixedColor = getMixedColor();
         resultContent.style.display = 'block';
         resultContent.style.borderColor = mixedColor;
-        resultContent.innerHTML = `
-          <div style="font-size:3rem;margin-bottom:0.5rem;">✨</div>
-          <h3>🍸 ${post.title}</h3>
-          <p>${post.description || '一杯恰到好处的酒'}</p>
-          <a href="${post.url}" class="btn-read">📖 阅读这篇文章</a>
+
+        let listHtml = `
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🍸</div>
+          <h3 style="margin-bottom:0.8rem;">找到 ${matched.length} 杯酒</h3>
+          <div class="matched-list">
         `;
+        matched.forEach(post => {
+          const recipeHtml = (post.moods || []).map(m => {
+            const s = getSpiritData(m);
+            return s ? `${s.emoji} ${s.name}` : m;
+          }).join(' + ');
+          listHtml += `
+            <div class="matched-item" data-url="${post.url}">
+              <span class="matched-title">${post.title}</span>
+              <span class="matched-recipe">${recipeHtml}</span>
+              ${post.description ? `<span class="matched-desc">${post.description}</span>` : ''}
+            </div>
+          `;
+        });
+        listHtml += '</div>';
+        resultContent.innerHTML = listHtml;
+
+        // 点击匹配文章时显示"谢谢品尝"后再跳转
+        resultContent.querySelectorAll('.matched-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            const url = this.dataset.url;
+            if (!url) return;
+            showThanksThenGo(url);
+          });
+        });
         // 彩带/粒子效果
         createParticles();
       } else {
@@ -284,6 +301,31 @@ document.addEventListener('DOMContentLoaded', function() {
       container.appendChild(particle);
       setTimeout(() => particle.remove(), 2500);
     }
+  }
+
+  // --- 谢谢品尝动画 ---
+  function showThanksThenGo(url) {
+    // 创建遮罩
+    const overlay = document.createElement('div');
+    overlay.className = 'thanks-overlay';
+    overlay.innerHTML = `
+      <div class="thanks-content">
+        <div class="thanks-emoji">🍸</div>
+        <div class="thanks-text">谢谢品尝</div>
+        <div class="thanks-sub">愿这杯酒带给你一个好故事</div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    // 触发动画
+    requestAnimationFrame(() => {
+      overlay.classList.add('thanks-active');
+    });
+
+    // 延迟后跳转
+    setTimeout(() => {
+      window.location.href = url;
+    }, 1200);
   }
 
   // --- 事件绑定 ---

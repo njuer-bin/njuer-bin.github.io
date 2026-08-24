@@ -12,3 +12,6 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# 信箱配置（含 GitHub Token，不提交到 git）
+static/js/mailbox-config.js

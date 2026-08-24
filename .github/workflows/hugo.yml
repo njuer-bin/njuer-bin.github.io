@@ -28,6 +28,16 @@ jobs:
         with:
           hugo-version: '0.128.0'
 
+      - name: Inject mailbox config
+        run: |
+          cat > static/js/mailbox-config.js << 'EOF'
+          // 月光酒馆 - 信箱配置（自动生成，请勿手动修改）
+          var MAILBOX_CONFIG = {
+            githubToken: '${{ secrets.MAILBOX_GITHUB_TOKEN }}',
+            githubRepo: 'njuer-bin/njuer-bin.github.io',
+          };
+          EOF
+
       - name: Build
         run: hugo --minify
 

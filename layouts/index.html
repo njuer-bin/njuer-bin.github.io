@@ -138,23 +138,23 @@
 window.tavernPosts = [
   {{ range where .Site.RegularPages "Section" "posts" }}
   {
-    title: {{ .Title | jsonify }},
-    url: {{ .RelPermalink | jsonify }},
-    description: {{ .Description | jsonify }},
-    moods: {{ .Params.moods | jsonify }},
-    date: {{ .Date.Format "2006-01-02" | jsonify }},
-    categories: {{ .Params.categories | jsonify }}
+    title: {{ .Title | jsonify | safeJS }},
+    url: {{ .RelPermalink | jsonify | safeJS }},
+    description: {{ .Description | jsonify | safeJS }},
+    moods: {{ .Params.moods | jsonify | safeJS }},
+    date: {{ .Date.Format "2006-01-02" | jsonify | safeJS }},
+    categories: {{ .Params.categories | jsonify | safeJS }}
   },
   {{ end }}
 ];
 window.spiritsData = [
   {{ range .Site.Params.spirits }}
   {
-    id: {{ .id | jsonify }},
-    name: {{ .name | jsonify }},
-    emoji: {{ .emoji | jsonify }},
-    mood: {{ .mood | jsonify }},
-    color: {{ .color | jsonify }}
+    id: {{ .id | jsonify | safeJS }},
+    name: {{ .name | jsonify | safeJS }},
+    emoji: {{ .emoji | jsonify | safeJS }},
+    mood: {{ .mood | jsonify | safeJS }},
+    color: {{ .color | jsonify | safeJS }}
   },
   {{ end }}
 ];
