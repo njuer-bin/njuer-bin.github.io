@@ -302,24 +302,34 @@ window.spiritsData = [
     var song = playlist[index];
     currentIndex = index;
 
-    // 切换音频源
+    function doPlay() {
+      audio.play().then(function() {
+        isPlaying = true;
+        player.classList.add('playing');
+        vinyl.classList.add('spinning');
+        needle.classList.add('down');
+        songEl.textContent = song.name;
+        statusEl.textContent = '正在播放';
+        renderPlaylist();
+      }).catch(function(err) {
+        console.error('🎵 播放失败:', err);
+        isPlaying = false;
+        statusEl.textContent = '点击选歌';
+      });
+    }
+
+    // 切换音频源时，等待加载完成后再播放
     if (audio.src !== window.location.origin + song.file) {
       audio.src = song.file;
       audio.load();
+      var onCanPlay = function() {
+        audio.removeEventListener('canplay', onCanPlay);
+        doPlay();
+      };
+      audio.addEventListener('canplay', onCanPlay);
+    } else {
+      doPlay();
     }
-
-    audio.play().then(function() {
-      isPlaying = true;
-      player.classList.add('playing');
-      vinyl.classList.add('spinning');
-      needle.classList.add('down');
-      songEl.textContent = song.name;
-      statusEl.textContent = '正在播放';
-      renderPlaylist();
-    }).catch(function() {
-      isPlaying = false;
-      statusEl.textContent = '点击选歌';
-    });
   }
 
   /** 切换播放/暂停 */
@@ -333,21 +343,8 @@ window.spiritsData = [
       statusEl.textContent = '已暂停';
       renderPlaylist();
     } else {
-      // 如果还没加载音频源，加载默认歌曲
-      if (!audio.src) {
-        playSong(currentIndex);
-      } else {
-        audio.play().then(function() {
-          isPlaying = true;
-          player.classList.add('playing');
-          vinyl.classList.add('spinning');
-          needle.classList.add('down');
-          statusEl.textContent = '正在播放';
-          renderPlaylist();
-        }).catch(function() {
-          statusEl.textContent = '点击选歌';
-        });
-      }
+      // 直接调用 playSong 播放当前歌曲
+      playSong(currentIndex);
     }
   }
 
