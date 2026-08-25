@@ -14,8 +14,9 @@
   <div class="bar-counter" id="barCounter">
     <!-- 植物图片位 -->
     <div class="plant-spot">
-      <img src="/images/plant-placeholder.png" alt="吧台绿植" class="plant-image" id="plantImage">
-      <p class="plant-hint">🌿 放一盆绿植吧</p>
+      <div class="plant-pot">
+        <img src="/images/花.jpg" alt="吧台绿植" class="plant-image" id="plantImage">
+      </div>
     </div>
 
     <!-- 吧台蜡烛 -->
@@ -130,6 +131,34 @@
   </div>
   <span class="mailbox-label">📬 信箱</span>
 </a>
+
+<!-- 背景音乐播放器 -->
+<div class="music-player" id="musicPlayer">
+  <audio id="bgMusic" loop preload="metadata"></audio>
+  <div class="player-vinyl" id="playerVinyl">
+    <div class="vinyl-disc">
+      <div class="vinyl-label">
+        <span class="vinyl-icon">🎵</span>
+      </div>
+    </div>
+    <div class="vinyl-needle" id="vinylNeedle"></div>
+  </div>
+  <div class="player-info" id="playerInfo">
+    <span class="player-song" id="playerSong">The Truth That You Leave</span>
+    <span class="player-status" id="playerStatus">点击选歌</span>
+  </div>
+
+  <!-- 歌曲列表弹窗 -->
+  <div class="playlist-popup" id="playlistPopup">
+    <div class="playlist-header">
+      <span class="playlist-title">📀 酒馆唱片</span>
+      <span class="playlist-count" id="playlistCount">0 首</span>
+    </div>
+    <div class="playlist-body" id="playlistBody">
+      <!-- 由 JS 动态生成 -->
+    </div>
+  </div>
+</div>
 {{ end }}
 
 {{ define "extra_scripts" }}
@@ -208,6 +237,174 @@ window.spiritsData = [
       speech.querySelector('.speech-text').textContent = '👋 点我调酒';
     }
   });
+})();
+
+// 背景音乐播放器
+(function() {
+  var audio = document.getElementById('bgMusic');
+  var player = document.getElementById('musicPlayer');
+  var vinyl = document.getElementById('playerVinyl');
+  var needle = document.getElementById('vinylNeedle');
+  var statusEl = document.getElementById('playerStatus');
+  var songEl = document.getElementById('playerSong');
+  var popup = document.getElementById('playlistPopup');
+  var playlistBody = document.getElementById('playlistBody');
+  var playlistCount = document.getElementById('playlistCount');
+  if (!audio || !player) return;
+
+  // 歌曲列表（可扩展，添加新歌只需在此增加条目）
+  var playlist = [
+    {
+      name: 'The Truth That You Leave',
+      artist: 'Pianoboy高至豪',
+      file: '/music/Pianoboy%E9%AB%98%E8%87%B3%E8%B1%AA%20-%20The%20Truth%20That%20You%20Leave%20(%E4%BD%A0%E7%A6%BB%E5%BC%80%E7%9A%84%E4%BA%8B%E5%AE%9E).mp3',
+    },
+  ];
+
+  var currentIndex = 0;
+  var isPlaying = false;
+
+  /** 渲染歌曲列表 */
+  function renderPlaylist() {
+    if (!playlistBody || !playlistCount) return;
+    playlistCount.textContent = playlist.length + ' 首';
+    var html = '';
+    for (var i = 0; i < playlist.length; i++) {
+      var s = playlist[i];
+      var active = i === currentIndex ? ' active' : '';
+      var playing = i === currentIndex && isPlaying ? ' now-playing' : '';
+      html +=
+        '<div class="playlist-item' + active + playing + '" data-index="' + i + '">' +
+          '<span class="playlist-indicator">' + (i === currentIndex && isPlaying ? '🔊' : '🎵') + '</span>' +
+          '<div class="playlist-item-info">' +
+            '<span class="playlist-item-name">' + s.name + '</span>' +
+            '<span class="playlist-item-artist">' + s.artist + '</span>' +
+          '</div>' +
+        '</div>';
+    }
+    playlistBody.innerHTML = html;
+
+    // 绑定点击事件
+    var items = playlistBody.querySelectorAll('.playlist-item');
+    for (var j = 0; j < items.length; j++) {
+      items[j].addEventListener('click', function(e) {
+        e.stopPropagation();
+        var index = parseInt(this.dataset.index, 10);
+        playSong(index);
+        closePlaylist();
+      });
+    }
+  }
+
+  /** 播放指定歌曲 */
+  function playSong(index) {
+    if (index < 0 || index >= playlist.length) return;
+    var song = playlist[index];
+    currentIndex = index;
+
+    // 切换音频源
+    if (audio.src !== window.location.origin + song.file) {
+      audio.src = song.file;
+      audio.load();
+    }
+
+    audio.play().then(function() {
+      isPlaying = true;
+      player.classList.add('playing');
+      vinyl.classList.add('spinning');
+      needle.classList.add('down');
+      songEl.textContent = song.name;
+      statusEl.textContent = '正在播放';
+      renderPlaylist();
+    }).catch(function() {
+      isPlaying = false;
+      statusEl.textContent = '点击选歌';
+    });
+  }
+
+  /** 切换播放/暂停 */
+  function togglePlay() {
+    if (isPlaying) {
+      audio.pause();
+      isPlaying = false;
+      player.classList.remove('playing');
+      vinyl.classList.remove('spinning');
+      needle.classList.remove('down');
+      statusEl.textContent = '已暂停';
+      renderPlaylist();
+    } else {
+      // 如果还没加载音频源，加载默认歌曲
+      if (!audio.src) {
+        playSong(currentIndex);
+      } else {
+        audio.play().then(function() {
+          isPlaying = true;
+          player.classList.add('playing');
+          vinyl.classList.add('spinning');
+          needle.classList.add('down');
+          statusEl.textContent = '正在播放';
+          renderPlaylist();
+        }).catch(function() {
+          statusEl.textContent = '点击选歌';
+        });
+      }
+    }
+  }
+
+  /** 打开歌曲列表 */
+  function openPlaylist() {
+    if (!popup) return;
+    popup.classList.add('open');
+    player.classList.add('popup-open');
+  }
+
+  /** 关闭歌曲列表 */
+  function closePlaylist() {
+    if (!popup) return;
+    popup.classList.remove('open');
+    player.classList.remove('popup-open');
+  }
+
+  /** 切换歌曲列表 */
+  function togglePlaylist() {
+    if (popup.classList.contains('open')) {
+      closePlaylist();
+    } else {
+      renderPlaylist();
+      openPlaylist();
+    }
+  }
+
+  // 点击黑胶唱片 → 切换歌曲列表
+  if (vinyl) {
+    vinyl.addEventListener('click', function(e) {
+      e.stopPropagation();
+      togglePlaylist();
+    });
+  }
+
+  // 点击播放信息区域 → 播放/暂停
+  var info = document.getElementById('playerInfo');
+  if (info) {
+    info.addEventListener('click', function(e) {
+      e.stopPropagation();
+      togglePlay();
+    });
+  }
+
+  // 点击外部关闭列表
+  document.addEventListener('click', function(e) {
+    if (popup && popup.classList.contains('open') && !player.contains(e.target)) {
+      closePlaylist();
+    }
+  });
+
+  // 初始加载默认歌曲
+  audio.src = playlist[0].file;
+  audio.load();
+  songEl.textContent = playlist[0].name;
+  statusEl.textContent = '点击选歌';
+  renderPlaylist();
 })();
 </script>
 {{ end }}

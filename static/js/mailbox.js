@@ -4,6 +4,7 @@
  * - 备选：通过 Formspree 发送（无 Token 时自动降级）
  * - 读信：通过 GitHub Issues API 公开读取
  * - 搜索、排序、分页、详情弹窗、回复
+ * - 沉浸式信笺书写 + 火焰燃烧特效
  */
 
 (function () {
@@ -22,18 +23,17 @@
   var currentPage = 1;
   var hasMore = true;
   var isLoading = false;
-  var currentSort = 'desc'; // 'desc' = 最新优先, 'asc' = 最早优先
+  var currentSort = 'desc';
   var currentSearch = '';
   var currentIssueNumber = null;
-  var pendingIdCounter = 0; // 当前弹窗中的 Issue 编号
+  var pendingIdCounter = 0;
 
-  // ====== DOM 引用 ======
+  // ====== DOM 引用（原有） ======
   var form = document.getElementById('letterForm');
   var nameInput = document.getElementById('name');
   var titleInput = document.getElementById('title');
   var messageInput = document.getElementById('message');
   var charCount = document.getElementById('charCount');
-  var submitBtn = document.getElementById('submitBtn');
   var lettersContainer = document.getElementById('lettersContainer');
   var searchInput = document.getElementById('searchInput');
   var searchClear = document.getElementById('searchClear');
@@ -45,6 +45,20 @@
   var modalClose = document.getElementById('modalClose');
   var modalBody = document.getElementById('modalBody');
   var notification = document.getElementById('notification');
+
+  // ====== DOM 引用（信笺弹窗） ======
+  var paperModal = document.getElementById('letterPaperModal');
+  var paperModalBackdrop = document.getElementById('paperModalBackdrop');
+  var paperContainer = document.getElementById('paperContainer');
+  var letterPaper = document.getElementById('letterPaper');
+  var openBtn = document.getElementById('openLetterPaperBtn');
+  var cancelBtn = document.getElementById('paperCancelBtn');
+  var paperSubmitBtn = document.getElementById('paperSubmitBtn');
+  var flameScene = document.getElementById('flameScene');
+  var flameParticles = document.getElementById('flameParticles');
+  var flameAshes = document.getElementById('flameAshes');
+  var immortalScene = document.getElementById('immortalScene');
+  var immortalParticles = document.getElementById('immortalParticles');
 
   // ====== 工具函数 ======
 
@@ -59,12 +73,6 @@
     notification._hideTimer = setTimeout(function () {
       notification.classList.remove('notification-visible');
     }, 4000);
-  }
-
-  function setLoading(loading) {
-    if (!submitBtn) return;
-    submitBtn.disabled = loading;
-    submitBtn.textContent = loading ? '📨 寄出中...' : '📨 寄出';
   }
 
   function escapeHtml(str) {
@@ -95,7 +103,6 @@
     if (match) {
       from = match[1].trim();
     }
-    // 去掉正文中的元数据部分
     var content = body;
     var separatorIndex = content.indexOf('---');
     if (separatorIndex !== -1) {
@@ -119,7 +126,7 @@
            (letter.body && letter.body.toLowerCase().indexOf(kw) !== -1);
   }
 
-  // ====== 寄信 ======
+  // ====== 寄信（API） ======
 
   /** 通过 GitHub API 创建 Issue */
   function createIssueViaGitHub(name, title, message) {
@@ -173,7 +180,6 @@
       headers: { 'Accept': 'application/vnd.github+json' },
     }).then(function (res) {
       if (!res.ok) throw new Error('加载失败');
-      // 检查是否有更多页（GitHub 返回的 Link header）
       var linkHeader = res.headers.get('Link');
       hasMore = linkHeader && linkHeader.indexOf('rel="next"') !== -1;
       return res.json();
@@ -201,7 +207,6 @@
           return;
         }
 
-        // 过滤掉 PR
         var newLetters = [];
         for (var i = 0; i < issues.length; i++) {
           if (issues[i].pull_request) continue;
@@ -236,16 +241,12 @@
   // ====== 搜索与排序 ======
 
   function applyFiltersAndRender() {
-    // 先排序
     var sorted = sortLetters(allLetters);
-
-    // 再搜索
     if (currentSearch) {
       sorted = sorted.filter(function (l) {
         return letterMatchesSearch(l, currentSearch);
       });
     }
-
     displayedLetters = sorted;
     renderLetterList(displayedLetters);
   }
@@ -288,7 +289,6 @@
     html += '</div>';
     lettersContainer.innerHTML = html;
 
-    // 绑定点击事件
     var cards = lettersContainer.querySelectorAll('.letter-card');
     for (var j = 0; j < cards.length; j++) {
       cards[j].addEventListener('click', function () {
@@ -306,8 +306,6 @@
       if (searchClear) {
         searchClear.classList.toggle('visible', !!currentSearch);
       }
-      // 如果有搜索词但当前 letters 不全，先加载所有
-      // 但为了简单，只在已加载的范围内搜索
       applyFiltersAndRender();
     });
   }
@@ -358,8 +356,6 @@
     modalBody.innerHTML = '<div class="modal-loading">📬 加载中...</div>';
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
-
-    // 加载 Issue 详情和评论
     loadLetterDetail(issueNumber);
   }
 
@@ -371,7 +367,6 @@
   }
 
   function loadLetterDetail(issueNumber) {
-    // 从 allLetters 中找缓存
     var letter = null;
     for (var i = 0; i < allLetters.length; i++) {
       if (allLetters[i].id === issueNumber) {
@@ -381,7 +376,6 @@
     }
 
     if (!letter) {
-      // 不在缓存中，单独 fetch
       var url = 'https://api.github.com/repos/' + GITHUB_REPO + '/issues/' + issueNumber;
       fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
         .then(function (res) {
@@ -430,7 +424,6 @@
         '<button class="btn-reply" id="replySubmitBtn">📨 发送回复</button>' +
       '</div>';
 
-    // 绑定回复提交
     var replyBtn = document.getElementById('replySubmitBtn');
     if (replyBtn) {
       replyBtn.addEventListener('click', function () {
@@ -471,7 +464,6 @@
     var html = '';
     for (var i = 0; i < comments.length; i++) {
       var c = comments[i];
-      // 如果评论是机器人发的，显示为"酒馆主人"
       var author = c.user && c.user.login === 'github-actions[bot]' ? '🏮 酒馆主人' : (c.user ? c.user.login : '匿名');
       html +=
         '<div class="reply-item">' +
@@ -503,7 +495,6 @@
     replyBtn.disabled = true;
     replyBtn.textContent = '📨 发送中...';
 
-    // 通过 Formspree 发送回复
     var formData = new FormData();
     formData.append('name', name);
     formData.append('issue_number', issueNumber);
@@ -519,9 +510,6 @@
         if (res.ok) {
           showNotification('💬 回复已发送，等待酒馆主人确认', 'success');
           if (replyMessage) replyMessage.value = '';
-          if (replyName && replyName.value && replyName.value === name) {
-            // 保留名字
-          }
         } else {
           throw new Error('发送失败');
         }
@@ -540,11 +528,9 @@
   if (modalClose) {
     modalClose.addEventListener('click', closeLetterModal);
   }
-
   if (modalBackdrop) {
     modalBackdrop.addEventListener('click', closeLetterModal);
   }
-
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && modal && modal.classList.contains('open')) {
       closeLetterModal();
@@ -560,7 +546,206 @@
     });
   }
 
-  // ====== 寄信表单提交 ======
+  // ====== 信笺弹窗 ======
+
+  /** 打开信笺书写弹窗 */
+  function openLetterPaperModal() {
+    if (!paperModal) return;
+    // 重置所有状态
+    resetPaperModal();
+    paperModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // 聚焦到第一个输入
+    if (nameInput) setTimeout(function () { nameInput.focus(); }, 600);
+  }
+
+  /** 关闭信笺书写弹窗 */
+  function closeLetterPaperModal() {
+    if (!paperModal) return;
+    // 如果正在燃烧动画中，不关闭（用户主动关闭会跳过）
+    if (flameScene && flameScene.classList.contains('active')) return;
+    paperModal.classList.remove('open');
+    document.body.style.overflow = '';
+    resetPaperModal();
+  }
+
+  /** 强制关闭弹窗（动画结束后使用） */
+  function forceClosePaperModal() {
+    if (!paperModal) return;
+    // 先清除火焰和永生状态
+    if (flameScene) flameScene.classList.remove('active');
+    if (flameParticles) flameParticles.innerHTML = '';
+    if (flameAshes) flameAshes.classList.remove('visible');
+    if (immortalScene) immortalScene.classList.remove('active');
+    if (immortalParticles) immortalParticles.innerHTML = '';
+    if (letterPaper) {
+      letterPaper.classList.remove('burning');
+      letterPaper.style.opacity = '1';
+    }
+    paperModal.classList.remove('open');
+    document.body.style.overflow = '';
+    // 重置表单
+    if (form) form.reset();
+    if (charCount) charCount.textContent = '0 / 2000';
+    if (paperSubmitBtn) {
+      paperSubmitBtn.disabled = false;
+      paperSubmitBtn.innerHTML = '<span class="submit-icon">🔥</span><span class="submit-text">焚寄</span>';
+    }
+  }
+
+  /** 重置弹窗所有状态 */
+  function resetPaperModal() {
+    // 重置表单
+    if (form) form.reset();
+    if (charCount) charCount.textContent = '0 / 2000';
+    // 隐藏火焰场景
+    if (flameScene) flameScene.classList.remove('active');
+    if (flameParticles) flameParticles.innerHTML = '';
+    if (flameAshes) flameAshes.classList.remove('visible');
+    // 隐藏永生信息
+    if (immortalScene) immortalScene.classList.remove('active');
+    if (immortalParticles) immortalParticles.innerHTML = '';
+    // 恢复信纸样式
+    if (letterPaper) {
+      letterPaper.classList.remove('burning');
+      letterPaper.style.opacity = '1';
+    }
+    // 恢复提交按钮
+    if (paperSubmitBtn) {
+      paperSubmitBtn.disabled = false;
+      paperSubmitBtn.innerHTML = '<span class="submit-icon">🔥</span><span class="submit-text">焚寄</span>';
+    }
+  }
+
+  /** 创建火焰粒子 */
+  function createFlameParticles(count) {
+    if (!flameParticles) return;
+    flameParticles.innerHTML = '';
+    for (var i = 0; i < count; i++) {
+      var p = document.createElement('span');
+      p.className = 'flame-particle';
+      var size = 2 + Math.random() * 4;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.bottom = '0';
+      p.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      p.style.animationDelay = (Math.random() * 1.5) + 's';
+      // 随机颜色：橙黄红
+      var colors = ['#ff6b35', '#ff8c42', '#ffd54f', '#ffab40', '#ff3d00'];
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.borderRadius = '50%';
+      flameParticles.appendChild(p);
+    }
+  }
+
+  /** 创建永生粒子 */
+  function createImmortalParticles(count) {
+    if (!immortalParticles) return;
+    immortalParticles.innerHTML = '';
+    for (var i = 0; i < count; i++) {
+      var p = document.createElement('span');
+      p.className = 'immortal-particle';
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.bottom = '0';
+      p.style.animationDuration = (3 + Math.random() * 4) + 's';
+      p.style.animationDelay = (Math.random() * 3) + 's';
+      p.style.width = (1 + Math.random() * 2) + 'px';
+      p.style.height = p.style.width;
+      immortalParticles.appendChild(p);
+    }
+  }
+
+  /** 开始火焰燃烧动画 */
+  function startFlameAnimation() {
+    if (!flameScene || !letterPaper) return;
+
+    // 显示火焰场景
+    flameScene.classList.add('active');
+    createFlameParticles(40);
+
+    // 信纸开始燃烧抖动
+    letterPaper.classList.add('burning');
+
+    // 火焰边缘上升动画
+    var flameEdge = flameScene.querySelector('.flame-edge');
+    var flameGlow = flameScene.querySelector('.flame-glow-bottom');
+    if (flameEdge) {
+      flameEdge.style.transition = 'all 3s cubic-bezier(0.25, 0.1, 0.25, 1)';
+      flameEdge.style.top = '0';
+      flameEdge.style.height = '100%';
+      flameEdge.style.background = 'linear-gradient(180deg, ' +
+        'rgba(255,255,200,1) 0%, ' +
+        'rgba(255,200,50,0.8) 10%, ' +
+        'rgba(255,120,50,0.5) 30%, ' +
+        'rgba(255,60,20,0.3) 50%, ' +
+        'rgba(100,30,10,0.6) 70%, ' +
+        'rgba(20,10,5,0.95) 100%)';
+    }
+    if (flameGlow) {
+      flameGlow.style.transition = 'all 3s ease';
+      flameGlow.style.height = '100%';
+      flameGlow.style.background = 'linear-gradient(0deg, ' +
+        'rgba(255,100,30,0.8) 0%, ' +
+        'rgba(255,150,50,0.4) 20%, ' +
+        'rgba(255,200,100,0.2) 40%, ' +
+        'transparent 60%)';
+    }
+
+    // 3秒后灰烬覆盖
+    setTimeout(function () {
+      if (flameAshes) flameAshes.classList.add('visible');
+      if (letterPaper) {
+        letterPaper.style.opacity = '0.3';
+        letterPaper.style.transition = 'opacity 1s ease';
+      }
+    }, 2500);
+
+    // 4.5秒后显示永生信息
+    setTimeout(function () {
+      showImmortalScene();
+    }, 4500);
+  }
+
+  /** 显示永生信息 */
+  function showImmortalScene() {
+    if (!immortalScene) return;
+    immortalScene.classList.add('active');
+    createImmortalParticles(30);
+
+    // 4.5秒后关闭整个弹窗
+    setTimeout(function () {
+      forceClosePaperModal();
+      // 显示成功通知
+      showNotification('📨 你的锦书已在云中永生', 'success');
+    }, 4500);
+  }
+
+  // ====== 信笺弹窗事件绑定 ======
+
+  // 打开
+  if (openBtn) {
+    openBtn.addEventListener('click', openLetterPaperModal);
+  }
+
+  // 取消按钮
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeLetterPaperModal);
+  }
+
+  // 点击遮罩关闭
+  if (paperModalBackdrop) {
+    paperModalBackdrop.addEventListener('click', closeLetterPaperModal);
+  }
+
+  // ESC 关闭
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && paperModal && paperModal.classList.contains('open')) {
+      closeLetterPaperModal();
+    }
+  });
+
+  // ====== 信笺表单提交 ======
 
   if (form) {
     form.addEventListener('submit', function (e) {
@@ -572,24 +757,28 @@
 
       if (!title.trim()) {
         showNotification('请填写信件标题', 'error');
+        if (titleInput) titleInput.focus();
         return;
       }
       if (!message.trim()) {
         showNotification('请写下你想说的话', 'error');
+        if (messageInput) messageInput.focus();
         return;
       }
 
-      setLoading(true);
+      // 禁用提交按钮
+      if (paperSubmitBtn) {
+        paperSubmitBtn.disabled = true;
+        paperSubmitBtn.innerHTML = '<span class="submit-text">焚寄中...</span>';
+      }
 
       // 判断是否有 GitHub Token
       var useGitHub = GITHUB_TOKEN ? true : false;
 
       var submitPromise;
       if (useGitHub) {
-        // 用 GitHub API 创建 Issue
         submitPromise = createIssueViaGitHub(name, title, message)
           .then(function (issue) {
-            // 添加到本地列表，立即显示
             var newLetter = {
               id: issue.number,
               title: title.trim() || '无标题',
@@ -597,17 +786,14 @@
               body: message.trim(),
               date: issue.created_at,
             };
-            // 从 allLetters 中移除同名的临时条目
             allLetters = allLetters.filter(function (l) { return l.id >= 0; });
             allLetters.unshift(newLetter);
             applyFiltersAndRender();
             return { success: true };
           });
       } else {
-        // 无 Token，用 Formspree 降级（不会立即显示）
         submitPromise = submitLetterViaFormspree(name, title, message)
           .then(function () {
-            // 添加到本地列表，显示为"待公开"
             pendingIdCounter--;
             var pendingLetter = {
               id: pendingIdCounter,
@@ -625,18 +811,15 @@
 
       submitPromise
         .then(function () {
-          showNotification('📨 信件已安全送达酒馆！', 'success');
-
-          if (nameInput) nameInput.value = '';
-          if (titleInput) titleInput.value = '';
-          if (messageInput) messageInput.value = '';
-          if (charCount) charCount.textContent = '0 / 2000';
+          // 寄信成功 → 开始火焰燃烧动画
+          startFlameAnimation();
         })
         .catch(function (err) {
-          showNotification('❌ ' + err.message, 'error');
-        })
-        .finally(function () {
-          setLoading(false);
+          showNotification('❌ ' + (err.message || '寄信失败'), 'error');
+          if (paperSubmitBtn) {
+            paperSubmitBtn.disabled = false;
+            paperSubmitBtn.innerHTML = '<span class="submit-icon">🔥</span><span class="submit-text">焚寄</span>';
+          }
         });
     });
   }

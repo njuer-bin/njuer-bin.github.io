@@ -10,26 +10,23 @@
 
   <!-- 两栏布局 -->
   <div class="mailbox-columns">
-    <!-- 左栏：写信 -->
+    <!-- 左栏：写信入口 -->
     <div class="mailbox-col-left">
       <div class="mailbox-write">
-        <h2>📝 写一封信</h2>
-        <form id="letterForm" class="letter-form">
-          <div class="form-group">
-            <label for="name">你的名字</label>
-            <input type="text" id="name" name="name" placeholder="匿名访客" maxlength="20">
+        <div class="write-invite">
+          <div class="invite-candle">🕯️</div>
+          <h2>写一封信</h2>
+          <p class="invite-text">在烛光下，铺开信纸，写下你想说的话</p>
+          <button class="btn-open-letter" id="openLetterPaperBtn">
+            <span class="btn-icon">📜</span>
+            <span class="btn-label">铺开信笺</span>
+          </button>
+          <div class="invite-ambient">
+            <span class="ambient-dot"></span>
+            <span class="ambient-dot"></span>
+            <span class="ambient-dot"></span>
           </div>
-          <div class="form-group">
-            <label for="title">标题</label>
-            <input type="text" id="title" name="title" placeholder="信件的标题" required maxlength="50">
-          </div>
-          <div class="form-group">
-            <label for="message">内容</label>
-            <textarea id="message" name="message" rows="6" placeholder="写下你想说的话..." required maxlength="2000"></textarea>
-            <span class="char-count" id="charCount">0 / 2000</span>
-          </div>
-          <button type="submit" id="submitBtn" class="btn btn-send">📨 寄出</button>
-        </form>
+        </div>
       </div>
     </div>
 
@@ -71,6 +68,97 @@
     <div class="letter-modal-body" id="modalBody">
       <div class="modal-loading">📬 加载中...</div>
     </div>
+  </div>
+</div>
+
+<!-- ====== 信笺书写弹窗 ====== -->
+<div class="letter-paper-modal" id="letterPaperModal">
+  <!-- 背景遮罩 -->
+  <div class="paper-modal-backdrop" id="paperModalBackdrop"></div>
+
+  <!-- 氛围光晕 -->
+  <div class="paper-ambient-glow"></div>
+
+  <!-- 信纸容器 -->
+  <div class="paper-container" id="paperContainer">
+    <!-- 蜡烛装饰 -->
+    <div class="candle-deco">
+      <div class="candle-wax">
+        <div class="candle-flame" id="candleFlame">
+          <span class="flame-core"></span>
+          <span class="flame-glow-ring"></span>
+        </div>
+      </div>
+      <div class="candle-drip"></div>
+    </div>
+
+    <!-- 信纸 -->
+    <div class="letter-paper" id="letterPaper">
+      <!-- 信纸装饰纹理 -->
+      <div class="paper-pattern"></div>
+
+      <!-- 信纸头部 -->
+      <div class="paper-header">
+        <span class="paper-ornament">✧</span>
+        <span class="paper-title">致 月光酒馆</span>
+        <span class="paper-ornament">✧</span>
+      </div>
+
+      <!-- 信纸正文（表单） -->
+      <form id="letterForm" class="paper-form" autocomplete="off">
+        <div class="paper-field">
+          <label for="name">署名</label>
+          <input type="text" id="name" name="name" placeholder="匿名访客" maxlength="20" />
+          <span class="field-line"></span>
+        </div>
+        <div class="paper-field">
+          <label for="title">标题</label>
+          <input type="text" id="title" name="title" placeholder="信件的标题" required maxlength="50" />
+          <span class="field-line"></span>
+        </div>
+        <div class="paper-field paper-field-message">
+          <label for="message">信文</label>
+          <textarea id="message" name="message" rows="6" placeholder="写下你想说的话..." required maxlength="2000"></textarea>
+          <span class="char-count" id="charCount">0 / 2000</span>
+        </div>
+
+        <!-- 信纸底部 -->
+        <div class="paper-footer">
+          <button type="button" class="btn-paper-cancel" id="paperCancelBtn">暂不写信</button>
+          <button type="submit" class="btn-paper-submit" id="paperSubmitBtn">
+            <span class="submit-icon">🔥</span>
+            <span class="submit-text">焚寄</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====== 火焰燃烧动画层 ====== -->
+  <div class="flame-scene" id="flameScene">
+    <!-- 火焰粒子 -->
+    <div class="flame-particles" id="flameParticles"></div>
+    <!-- 火焰底部光晕 -->
+    <div class="flame-glow-bottom"></div>
+    <!-- 燃烧边缘光带 -->
+    <div class="flame-edge"></div>
+    <!-- 灰烬 -->
+    <div class="flame-ashes" id="flameAshes"></div>
+  </div>
+
+  <!-- ====== 永生信息层 ====== -->
+  <div class="immortal-scene" id="immortalScene">
+    <div class="immortal-clouds">
+      <span class="cloud cloud-1"></span>
+      <span class="cloud cloud-2"></span>
+      <span class="cloud cloud-3"></span>
+    </div>
+    <div class="immortal-content">
+      <div class="immortal-icon">✨</div>
+      <h2 class="immortal-title">你的锦书已在云中永生</h2>
+      <p class="immortal-sub">字句入火，情意化云</p>
+    </div>
+    <div class="immortal-particles" id="immortalParticles"></div>
   </div>
 </div>
 

@@ -583,31 +583,81 @@ a:hover {
   flex-direction: column;
   align-items: center;
   margin-bottom: 1.5rem;
-  padding: 0.8rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: var(--radius-sm);
-  border: 1px dashed rgba(42, 24, 16, 0.5);
-  min-height: 90px;
-  justify-content: center;
+  padding: 0.5rem;
+  min-height: 110px;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* 花盆 */
+.plant-pot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: plant-sway 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes plant-sway {
+  0%, 100% { transform: rotate(-0.8deg); }
+  50% { transform: rotate(0.8deg); }
 }
 
 .plant-image {
-  max-width: 80px;
-  max-height: 80px;
+  max-width: 90px;
+  max-height: 100px;
   object-fit: contain;
-  transition: all var(--transition);
-  opacity: 0.4;
-  filter: grayscale(0.5);
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  transition: all 0.5s ease;
+  position: relative;
+  z-index: 2;
 }
-.plant-image[src="/images/plant-placeholder.png"] {
-  opacity: 0.2;
-  filter: grayscale(1);
+.plant-image:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4));
 }
 
-.plant-hint {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 0.3rem;
+/* 花盆容器（CSS 绘制） */
+.plant-pot::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 28px;
+  background: linear-gradient(160deg, #8B5E3C, #6D4C2A, #5A3E22);
+  border-radius: 0 0 10px 10px;
+  margin-top: -4px;
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  border-top: 2px solid #7A5230;
+}
+
+/* 花盆边缘 */
+.plant-pot::before {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 24px;
+  width: 72px;
+  height: 6px;
+  background: linear-gradient(160deg, #9B6E4C, #7A5230);
+  border-radius: 3px 3px 0 0;
+  z-index: 3;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 花盆底部阴影 */
+.plant-spot::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 80px;
+  height: 6px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
 /* --- 调酒区 --- */
@@ -2396,6 +2446,622 @@ a:hover {
   border: 1px solid rgba(244, 67, 54, 0.5);
 }
 
+/* ====== 写信邀请区（左栏） ====== */
+.write-invite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(42, 24, 16, 0.4);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s ease;
+}
+.write-invite:hover {
+  border-color: rgba(212, 162, 78, 0.15);
+}
+.invite-candle {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  animation: candle-glow 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(255, 180, 50, 0.3));
+}
+@keyframes candle-glow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(255,180,50,0.3)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(255,180,50,0.5)); }
+}
+.write-invite h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem;
+  letter-spacing: 3px;
+}
+.invite-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0 0 1.2rem;
+  line-height: 1.6;
+}
+.btn-open-letter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.8rem;
+  background: linear-gradient(135deg, rgba(212, 162, 78, 0.15), rgba(212, 162, 78, 0.05));
+  border: 1px solid rgba(212, 162, 78, 0.25);
+  border-radius: 8px;
+  color: var(--amber-light);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-open-letter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(212, 162, 78, 0.1));
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.btn-open-letter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212, 162, 78, 0.1);
+  border-color: rgba(212, 162, 78, 0.4);
+}
+.btn-open-letter:hover::before {
+  opacity: 1;
+}
+.btn-open-letter .btn-icon {
+  font-size: 1.1rem;
+}
+.invite-ambient {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+.ambient-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(212, 162, 78, 0.2);
+  animation: ambient-pulse 2s ease-in-out infinite;
+}
+.ambient-dot:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.ambient-dot:nth-child(3) {
+  animation-delay: 1s;
+}
+@keyframes ambient-pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+/* ====== 信笺书写弹窗 ====== */
+.letter-paper-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.letter-paper-modal.open {
+  display: flex;
+}
+.paper-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 1, 0, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.paper-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 180, 50, 0.06) 0%, transparent 70%);
+  animation: ambient-glow-pulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes ambient-glow-pulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* 信纸容器 */
+.paper-container {
+  position: relative;
+  width: 90%;
+  max-width: 520px;
+  padding: 1.5rem;
+  animation: paper-rise 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  z-index: 1;
+}
+@keyframes paper-rise {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 蜡烛装饰 */
+.candle-deco {
+  position: absolute;
+  top: -16px;
+  right: 2rem;
+  width: 24px;
+  height: 60px;
+  z-index: 5;
+  animation: candle-sway 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes candle-sway {
+  0%, 100% { transform: rotate(-0.5deg); }
+  50% { transform: rotate(0.5deg); }
+}
+.candle-wax {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 40px;
+  background: linear-gradient(180deg, #f5e6d3, #e8d5c0, #d4c4a8);
+  border-radius: 2px 2px 3px 3px;
+}
+.candle-drip {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 8px;
+  background: linear-gradient(180deg, #e8d5c0, #d4c4a8);
+  border-radius: 0 0 3px 3px;
+}
+.candle-flame {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 26px;
+}
+.flame-core {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 20px;
+  background: linear-gradient(180deg, #fff8e0, #ffd54f, #ff8f00);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flame-dance 0.8s ease-in-out infinite;
+  filter: blur(0.5px);
+}
+@keyframes flame-dance {
+  0%, 100% { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; transform: translateX(-50%) scale(1); }
+  25% { border-radius: 45% 55% 55% 45% / 55% 60% 40% 45%; transform: translateX(-50%) scale(1.05, 0.95); }
+  50% { border-radius: 55% 45% 45% 55% / 60% 55% 45% 40%; transform: translateX(-50%) scale(0.95, 1.05); }
+  75% { border-radius: 48% 52% 52% 48% / 55% 58% 42% 45%; transform: translateX(-50%) scale(1.02, 0.98); }
+}
+.flame-glow-ring {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle, rgba(255, 200, 50, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: flame-glow-pulse 1.5s ease-in-out infinite;
+}
+@keyframes flame-glow-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+  50% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+}
+
+/* 信纸主体 */
+.letter-paper {
+  position: relative;
+  background: linear-gradient(180deg, rgba(250, 245, 235, 0.95) 0%, rgba(245, 238, 220, 0.95) 50%, rgba(240, 232, 210, 0.95) 100%);
+  border-radius: 4px;
+  padding: 2rem 2rem 1.5rem;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(212, 162, 78, 0.05);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.letter-paper.burning {
+  animation: paper-burn-pulse 0.3s ease-in-out;
+}
+@keyframes paper-burn-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+}
+.paper-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(180, 160, 130, 0.08) 28px, rgba(180, 160, 130, 0.08) 29px);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* 信纸头部 */
+.paper-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(180, 160, 130, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+.paper-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #5a4a3a;
+  letter-spacing: 4px;
+  font-weight: 400;
+}
+.paper-ornament {
+  color: #b8a080;
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
+/* 信纸表单 */
+.paper-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.paper-field {
+  position: relative;
+}
+.paper-field label {
+  display: block;
+  font-size: 0.78rem;
+  color: #8a7a6a;
+  margin-bottom: 0.2rem;
+  letter-spacing: 2px;
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+.paper-field input,
+.paper-field textarea {
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(180, 160, 130, 0.25);
+  border-radius: 3px;
+  color: #3a2a1a;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  outline: none;
+}
+.paper-field input:focus,
+.paper-field textarea:focus {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(180, 160, 130, 0.5);
+  box-shadow: 0 0 12px rgba(180, 160, 130, 0.1);
+}
+.paper-field input::placeholder,
+.paper-field textarea::placeholder {
+  color: #c0b0a0;
+}
+.paper-field-message textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.7;
+}
+.paper-field-message .char-count {
+  display: block;
+  text-align: right;
+  font-size: 0.7rem;
+  color: #b0a090;
+  margin-top: 0.2rem;
+}
+
+/* 信纸底部 */
+.paper-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(180, 160, 130, 0.2);
+}
+.btn-paper-cancel {
+  padding: 0.6rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(180, 160, 130, 0.2);
+  border-radius: 6px;
+  color: #8a7a6a;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 1px;
+}
+.btn-paper-cancel:hover {
+  background: rgba(180, 160, 130, 0.1);
+  border-color: rgba(180, 160, 130, 0.3);
+}
+.btn-paper-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.8rem;
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-paper-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(192, 57, 43, 0.3);
+}
+.btn-paper-submit:active {
+  transform: translateY(0);
+}
+.btn-paper-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.submit-icon {
+  font-size: 1rem;
+  display: inline-block;
+  animation: submit-icon-dance 1.5s ease-in-out infinite;
+}
+@keyframes submit-icon-dance {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+/* ====== 火焰燃烧动画 ====== */
+.flame-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
+  overflow: hidden;
+}
+.flame-scene.active {
+  display: block;
+  animation: flame-scene-in 0.3s ease;
+}
+@keyframes flame-scene-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 火焰粒子 */
+.flame-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.flame-particle {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  background: #ff6b35;
+  border-radius: 50%;
+  animation: ember-rise linear forwards;
+  opacity: 0;
+}
+@keyframes ember-rise {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  10% { opacity: 1; }
+  50% { opacity: 0.8; }
+  90% { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-400px) scale(0); }
+}
+
+/* 火焰边缘光带 */
+.flame-edge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(180deg,
+    rgba(255, 120, 50, 0) 0%,
+    rgba(255, 120, 50, 0.4) 30%,
+    rgba(255, 200, 50, 0.8) 60%,
+    rgba(255, 255, 200, 1) 100%
+  );
+  border-radius: 50% 50% 0 0;
+  filter: blur(4px);
+  animation: flame-edge-glow 0.3s ease-in-out infinite alternate;
+}
+@keyframes flame-edge-glow {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+/* 火焰底部光晕 */
+.flame-glow-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background: linear-gradient(0deg,
+    rgba(255, 100, 30, 0.6) 0%,
+    rgba(255, 150, 50, 0.3) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* 灰烬层 */
+.flame-ashes {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg,
+    rgba(20, 10, 5, 0.95) 0%,
+    rgba(30, 15, 8, 0.8) 30%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+.flame-ashes.visible {
+  opacity: 1;
+}
+
+/* ====== 永生信息层 ====== */
+.immortal-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: radial-gradient(ellipse at center, rgba(10, 5, 2, 0.8) 0%, rgba(2, 1, 0, 0.95) 100%);
+  animation: immortal-fade-in 1.5s ease both;
+}
+.immortal-scene.active {
+  display: flex;
+}
+@keyframes immortal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 云朵装饰 */
+.immortal-clouds {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cloud {
+  position: absolute;
+  display: block;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: cloud-drift linear infinite;
+}
+.cloud-1 {
+  width: 300px;
+  height: 80px;
+  top: 15%;
+  left: -300px;
+  animation-duration: 25s;
+}
+.cloud-2 {
+  width: 200px;
+  height: 60px;
+  top: 30%;
+  left: -200px;
+  animation-duration: 35s;
+  animation-delay: 5s;
+}
+.cloud-3 {
+  width: 250px;
+  height: 70px;
+  top: 45%;
+  left: -250px;
+  animation-duration: 30s;
+  animation-delay: 10s;
+}
+@keyframes cloud-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(100vw + 500px)); }
+}
+
+/* 永生信息内容 */
+.immortal-content {
+  text-align: center;
+  z-index: 1;
+  animation: immortal-content-rise 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: 0.5s;
+}
+@keyframes immortal-content-rise {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.immortal-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  display: block;
+  animation: immortal-icon-spin 4s ease-in-out infinite;
+}
+@keyframes immortal-icon-spin {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(10deg); }
+}
+.immortal-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--amber-light);
+  letter-spacing: 6px;
+  font-weight: 400;
+  margin: 0 0 0.5rem;
+  text-shadow: 0 0 30px rgba(212, 162, 78, 0.3);
+}
+.immortal-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 4px;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* 永生粒子 */
+.immortal-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.immortal-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 200, 100, 0.4);
+  border-radius: 50%;
+  animation: immortal-particle-float linear infinite;
+}
+@keyframes immortal-particle-float {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-300px) scale(1); opacity: 0; }
+}
+
 /* 加载中状态 */
 .loading-letters {
   text-align: center;
@@ -2614,6 +3280,295 @@ a:hover {
   background: radial-gradient(ellipse, rgba(212, 162, 78, 0.15), transparent);
   border-radius: 50%;
   animation: bartender-glow 2s ease-in-out infinite;
+}
+
+/* ====== 背景音乐播放器 ====== */
+.music-player {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  background: rgba(10, 5, 2, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: 50px;
+  padding: 0.4rem 0.8rem 0.4rem 0.4rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+.music-player:hover {
+  border-color: rgba(212, 162, 78, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: rgba(15, 8, 4, 0.9);
+}
+
+/* 黑胶唱片 */
+.player-vinyl {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+.vinyl-disc {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #3a3a3a, #1a1a1a 40%, #0a0a0a 70%);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.03),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* 唱片纹路 */
+.vinyl-disc::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle at center,
+    transparent 0px,
+    transparent 1px,
+    rgba(255, 255, 255, 0.02) 1px,
+    rgba(255, 255, 255, 0.02) 2px
+  );
+  pointer-events: none;
+}
+.vinyl-label {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #c0392b, #8B1A1A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+.vinyl-label .vinyl-icon {
+  font-size: 0.45rem;
+  line-height: 1;
+}
+
+/* 唱片旋转 */
+.player-vinyl.spinning .vinyl-disc {
+  animation: vinyl-spin 3s linear infinite;
+}
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 唱针 */
+.vinyl-needle {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  width: 14px;
+  height: 20px;
+  transform-origin: top right;
+  transform: rotate(30deg);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.vinyl-needle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  background: #888;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+.vinyl-needle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 1px;
+  width: 2px;
+  height: 18px;
+  background: linear-gradient(180deg, #aaa, #666);
+  border-radius: 1px;
+  transform: rotate(15deg);
+  transform-origin: top center;
+}
+.vinyl-needle.down {
+  transform: rotate(10deg);
+}
+
+/* 播放信息 */
+.player-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+.player-song {
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  letter-spacing: 0.5px;
+}
+.player-status {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+.music-player.playing .player-status {
+  color: var(--amber-light);
+}
+
+/* 音量控制 */
+.music-player::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: 20px;
+  width: 24px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amber), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.music-player.playing::after {
+  opacity: 0.3;
+}
+
+/* 唱片停止时渐停效果 */
+.player-vinyl:not(.spinning) .vinyl-disc {
+  transition: transform 0.5s ease;
+}
+
+/* ====== 歌曲列表弹窗 ====== */
+.playlist-popup {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  width: 260px;
+  max-height: 300px;
+  background: rgba(10, 5, 2, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(42, 24, 16, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transform-origin: bottom right;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.playlist-popup.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* 列表头部 */
+.playlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(42, 24, 16, 0.4);
+  background: rgba(0, 0, 0, 0.2);
+}
+.playlist-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+.playlist-count {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* 列表主体 */
+.playlist-body {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 0.3rem;
+}
+.playlist-body::-webkit-scrollbar {
+  width: 3px;
+}
+.playlist-body::-webkit-scrollbar-thumb {
+  background: rgba(42, 24, 16, 0.4);
+  border-radius: 2px;
+}
+
+/* 列表项 */
+.playlist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.playlist-item:hover {
+  background: rgba(212, 162, 78, 0.06);
+}
+.playlist-item.active {
+  background: rgba(212, 162, 78, 0.08);
+}
+.playlist-item.active.now-playing {
+  background: rgba(212, 162, 78, 0.1);
+  border-left: 2px solid var(--amber);
+}
+.playlist-indicator {
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  width: 1.2rem;
+  text-align: center;
+}
+.playlist-item-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.playlist-item-name {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.5px;
+}
+.playlist-item.active .playlist-item-name {
+  color: var(--amber-light);
+}
+.playlist-item-artist {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 播放器打开列表时 */
+.music-player.popup-open {
+  border-color: rgba(212, 162, 78, 0.2);
 }
 
 @keyframes bartender-glow {
@@ -3176,6 +4131,66 @@ a:hover {
     padding: 0.6rem 1.2rem;
     top: 10px;
   }
+
+  /* ====== 信笺书写弹窗 - 响应式 ====== */
+  .paper-container {
+    width: 95%;
+    max-width: 440px;
+    padding: 1rem;
+  }
+  .letter-paper {
+    padding: 1.5rem 1.2rem;
+  }
+  .paper-header {
+    font-size: 1rem;
+  }
+  .paper-ornament {
+    font-size: 0.9rem;
+  }
+  .paper-field label {
+    font-size: 0.75rem;
+  }
+  .paper-field input,
+  .paper-field textarea {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+  .paper-field-message textarea {
+    min-height: 100px;
+  }
+  .paper-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .btn-paper-submit, .btn-paper-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+  .candle-deco {
+    width: 20px;
+    height: 50px;
+    top: -12px;
+  }
+  .candle-flame {
+    width: 12px;
+    height: 22px;
+  }
+
+  /* 火焰 - 响应式 */
+  .flame-scene.active .flame-edge {
+    height: 8px;
+  }
+
+  /* 永生信息 - 响应式 */
+  .immortal-title {
+    font-size: 1.1rem;
+  }
+  .immortal-sub {
+    font-size: 0.8rem;
+  }
+  .immortal-icon {
+    font-size: 2rem;
+  }
 }
 
 @media (max-width: 360px) {
@@ -3240,5 +4255,62 @@ a:hover {
 
   .page-title {
     font-size: 1rem;
+  }
+
+  /* 音乐播放器移动端适配 */
+  .music-player {
+    bottom: 12px;
+    right: 12px;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+  }
+  .player-vinyl {
+    width: 30px;
+    height: 30px;
+  }
+  .vinyl-disc {
+    width: 30px;
+    height: 30px;
+  }
+  .vinyl-label {
+    width: 12px;
+    height: 12px;
+  }
+  .vinyl-label .vinyl-icon {
+    font-size: 0.35rem;
+  }
+  .player-song {
+    font-size: 0.6rem;
+    max-width: 80px;
+  }
+  .player-status {
+    font-size: 0.55rem;
+  }
+  .vinyl-needle {
+    display: none;
+  }
+
+  /* 歌曲列表移动端适配 */
+  .playlist-popup {
+    width: 220px;
+    right: 0;
+    bottom: calc(100% + 8px);
+  }
+  .playlist-header {
+    padding: 0.5rem 0.8rem;
+  }
+  .playlist-title {
+    font-size: 0.7rem;
+  }
+  .playlist-body {
+    max-height: 180px;
+  }
+  .playlist-item {
+    padding: 0.4rem 0.6rem;
+  }
+  .playlist-item-name {
+    font-size: 0.7rem;
+  }
+  .playlist-item-artist {
+    font-size: 0.55rem;
   }
 }
