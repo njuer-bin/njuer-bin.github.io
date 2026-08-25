@@ -3413,6 +3413,13 @@ a:hover {
   flex-direction: column;
   line-height: 1.2;
   min-width: 0;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+.player-info:hover {
+  background: rgba(212, 162, 78, 0.06);
 }
 .player-song {
   font-size: 0.7rem;

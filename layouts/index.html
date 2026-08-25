@@ -302,31 +302,52 @@ window.spiritsData = [
     var song = playlist[index];
     currentIndex = index;
 
-    function doPlay() {
-      audio.play().then(function() {
+    // 更新界面显示
+    songEl.textContent = song.name;
+    statusEl.textContent = '加载中…';
+
+    // 切换音频源
+    var needLoad = !audio.src || audio.src.indexOf(song.file) === -1;
+    if (needLoad) {
+      audio.src = song.file;
+    }
+
+    // 尝试播放
+    var doPlay = function() {
+      var playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          isPlaying = true;
+          player.classList.add('playing');
+          vinyl.classList.add('spinning');
+          needle.classList.add('down');
+          statusEl.textContent = '正在播放';
+          renderPlaylist();
+        }).catch(function(err) {
+          console.error('🎵 播放失败:', err.name, err.message);
+          // 浏览器阻止自动播放 — 提示用户手动点击
+          isPlaying = false;
+          statusEl.textContent = '需要点击播放';
+        });
+      } else {
+        // 旧浏览器不支持 Promise
         isPlaying = true;
         player.classList.add('playing');
         vinyl.classList.add('spinning');
         needle.classList.add('down');
-        songEl.textContent = song.name;
         statusEl.textContent = '正在播放';
         renderPlaylist();
-      }).catch(function(err) {
-        console.error('🎵 播放失败:', err);
-        isPlaying = false;
-        statusEl.textContent = '点击选歌';
-      });
-    }
+      }
+    };
 
-    // 切换音频源时，等待加载完成后再播放
-    if (audio.src !== window.location.origin + song.file) {
-      audio.src = song.file;
+    if (needLoad) {
       audio.load();
-      var onCanPlay = function() {
-        audio.removeEventListener('canplay', onCanPlay);
-        doPlay();
-      };
-      audio.addEventListener('canplay', onCanPlay);
+      audio.addEventListener('canplay', doPlay, { once: true });
+      // 安全兜底：如果 canplay 5 秒内没触发，也尝试播放
+      setTimeout(function() {
+        audio.removeEventListener('canplay', doPlay);
+        if (!isPlaying) doPlay();
+      }, 5000);
     } else {
       doPlay();
     }
@@ -343,7 +364,6 @@ window.spiritsData = [
       statusEl.textContent = '已暂停';
       renderPlaylist();
     } else {
-      // 直接调用 playSong 播放当前歌曲
       playSong(currentIndex);
     }
   }
@@ -389,6 +409,15 @@ window.spiritsData = [
     });
   }
 
+  // 点击整个播放器（除了黑胶唱片和列表项）→ 播放/暂停
+  player.addEventListener('click', function(e) {
+    // 如果点击的是 vinyl 或播放列表项，不重复处理
+    if (vinyl && vinyl.contains(e.target)) return;
+    if (popup && popup.contains(e.target)) return;
+    if (info && info.contains(e.target)) return;
+    togglePlay();
+  });
+
   // 点击外部关闭列表
   document.addEventListener('click', function(e) {
     if (popup && popup.classList.contains('open') && !player.contains(e.target)) {
@@ -396,9 +425,9 @@ window.spiritsData = [
     }
   });
 
-  // 初始加载默认歌曲
+  // 初始加载默认歌曲（不加载音频数据，等用户点击后再加载播放）
+  audio.preload = 'none';
   audio.src = playlist[0].file;
-  audio.load();
   songEl.textContent = playlist[0].name;
   statusEl.textContent = '点击选歌';
   renderPlaylist();
